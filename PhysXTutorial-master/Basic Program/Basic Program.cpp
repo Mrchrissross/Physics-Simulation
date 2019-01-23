@@ -92,18 +92,23 @@ void InitScene()
 	plane = PxCreatePlane(*physics, PxPlane(PxVec3(0.f, 1.f, 0.f), 0.f), *default_material);
 	scene->addActor(*plane);
 
-	for (int i = 0; i < 2; i++)
-	{
+	//create a dynamic actor and place it 10 m above the ground
+	box = physics->createRigidDynamic(PxTransform(PxVec3(0.f, 0.5f, 0.f)));
+	//create a box shape of 1m x 1m x 1m size (values are provided in halves)
+	boxShape = box->createShape(PxBoxGeometry(.5f, .5f, .5f), *default_material);
+	//update the mass of the box
+	PxRigidBodyExt::updateMassAndInertia(*box, 1.f); //density of 1kg/m^3
+	scene->addActor(*box);
 
-		int random = rand
-		//create a dynamic actor and place it 10 m above the ground
-		box = physics->createRigidDynamic(PxTransform(PxVec3(0.f, 10.f, 0.f)));
-		//create a box shape of 1m x 1m x 1m size (values are provided in halves)
-		boxShape = box->createShape(PxBoxGeometry(.5f, .5f, .5f), *default_material);
-		//update the mass of the box
-		PxRigidBodyExt::updateMassAndInertia(*box, 1.f); //density of 1kg/m^3
-		scene->addActor(*box);
-	}
+	//create a dynamic actor and place it 10 m above the ground
+	box = physics->createRigidDynamic(PxTransform(PxVec3(0.f, 5.f, 0.f)));
+	//create a box shape of 1m x 1m x 1m size (values are provided in halves)
+	boxShape = box->createShape(PxBoxGeometry(.5f, .5f, .5f), *default_material);
+	//update the mass of the box
+	PxRigidBodyExt::updateMassAndInertia(*box, 1.f); //density of 1kg/m^3
+	scene->addActor(*box);
+
+	box->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
 }
 
 /// Perform a single simulation step
@@ -146,7 +151,7 @@ void Update(PxReal delta_time)
 	if (seconds == 2)
 	{
 		//box->setGlobalPose(PxTransform(PxVec3(10.f, 0.f, 0.f)));
-		box->addForce(PxVec3(0.001f, 0.0f, 0.0f));
+		//box->addForce(PxVec3(0.001f, 0.0f, 0.0f));
 	}
 }
 
