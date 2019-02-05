@@ -117,7 +117,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(PHYSX_SDK)\lib\vc14win64;.\Graphics\lib\win64\glut</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(PHYSX_SDK)\lib\vc14win64;.Graphics\lib\win64\glut</AdditionalLibraryDirectories>
       <AdditionalDependencies>PhysX3CommonDEBUG_$(PlatformTarget).lib;PhysX3ExtensionsDEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3DEBUG_$(PlatformTarget).lib;PhysX3CookingDEBUG_$(PlatformTarget).lib;glut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -1,0 +1,13 @@
+fixing this glut32.lib bullshit
+-------------------------------
+1. find glut32.lib in: C:\Program Files (x86)\NVIDIA Corporation\PhysX\NVIDIA PhysX SDK\3.3.4\Snippets\Graphics\lib\win64\glut
+
+2. copy to C:\Program Files (x86)\NVIDIA Corporation\PhysX\NVIDIA PhysX SDK\3.3.4\Lib\vc14win64
+
+3. clean & build
+
+
+...
+
+copy dll to:
+C:\Program Files (x86)\NVIDIA Corporation\PhysX\NVIDIA PhysX SDK\3.3.4\Bin\vc14win64
