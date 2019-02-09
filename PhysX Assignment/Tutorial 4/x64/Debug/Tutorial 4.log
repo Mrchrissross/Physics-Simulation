@@ -1,0 +1,15 @@
+﻿  GameScene.cpp
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(37): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(41): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(161): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(165): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(169): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(173): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(345): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(349): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(436): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\prefabbase.h(440): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(51): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+  VisualDebugger.cpp
+  Generating Code...
+  Tutorial 4.vcxproj -> C:\Users\Chris Ross\Documents\GitHub\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe

@@ -195,10 +195,6 @@ namespace VisualDebugger
 		}
 	}
 
-	void UserKeyHold(int key)
-	{
-	}
-
 	//handle camera control keys
 	void CameraInput(int key)
 	{
