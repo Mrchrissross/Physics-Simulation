@@ -27,9 +27,6 @@
     <ClInclude Include="Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyPhysicsEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicsEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,10 +51,10 @@
     <ClInclude Include="Extras\UserData.h">
       <Filter>Header Files\Extras</Filter>
     </ClInclude>
-    <ClInclude Include="PrefabBase.h">
+    <ClInclude Include="GameScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameScene.h">
+    <ClInclude Include="ComplexActors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
