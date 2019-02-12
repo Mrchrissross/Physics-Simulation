@@ -1,4 +1,13 @@
-﻿  Start.cpp
-  VisualDebugger.cpp
-  Generating Code...
+﻿  GameScene.cpp
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(67): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(69): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(227): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(231): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(235): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(239): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(429): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(433): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(499): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(503): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(58): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
   Tutorial 4.vcxproj -> C:\Users\Student\Documents\GitHub\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe

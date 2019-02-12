@@ -14,11 +14,40 @@ namespace PhysicsEngine
 		PxVec3(255.f / 255.f, 207.f / 255.f, 164.f / 255.f),
 		PxVec3(4.f / 255.f,117.f / 255.f,111.f / 255.f) };
 
-	class ComplexActors
+	class Ball
 	{
 	public:
-		ComplexActors() {};
-		~ComplexActors();
+		Sphere* ball;
+		PxReal gForceStrength = 20;
+
+		Ball(Scene* scene, PxVec3* position)
+		{
+			ball = new Sphere(PxTransform(PxVec3(position->x, position->y, position->z)), 0.3f, 15.0f);
+			ball->SetName("Ball");
+
+			scene->AddActor(ball);
+		}
+
+		Sphere* GetBall()
+		{
+			return ball;
+		}
+
+		PxVec3 GetPosition()
+		{
+			return ((PxRigidDynamic*)ball->GetPxActor())->getGlobalPose().p;
+		}
+
+		void Reset() 
+		{
+			((PxRigidDynamic*)ball->GetPxActor())->setGlobalPose(PxTransform(PxVec3(0, 3, 50)));
+			ball->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
+		}
+
+		void addForce(PxVec3 force)
+		{
+			ball->GetRigidBody()->addForce(force * gForceStrength);
+		}
 	};
 
 	class Windmill
@@ -32,28 +61,28 @@ namespace PhysicsEngine
 		RevoluteJoint* joint;
 		RevoluteJoint* joint2;
 
-		Windmill(Scene* scene, PxVec3* position, PxVec3* rotation, float scale)
+		Windmill(Scene* scene, PxVec3* position, bool side, float scale)
 		{
-			base = new Box(PxTransform(PxVec3(position->x - 1.9, position->y, position->z), PxQuat(40, PxVec3(0.0, 0.0, 1.0))), PxVec3(scale / 2, scale * 3, scale / 2));
+			if (side)
+				base = new Box(PxTransform(PxVec3(position->x - 1.9, position->y, position->z), PxQuat(40, PxVec3(0.0, 0.0, 1.0))), PxVec3(scale / 2, scale * 3, scale / 2));
+			else
+				base = new Box(PxTransform(PxVec3(position->x - 1.9, position->y, position->z), PxQuat(-40, PxVec3(0.0, 0.0, 1.0))), PxVec3(scale / 2, scale * 3, scale / 2));
+
 			base->SetKinematic(true);
 			base->SetColor(color_palette[0]);
 
-			base2 = new Box(PxTransform(PxVec3(position->x + 1.9, position->y, position->z), PxQuat(-40, PxVec3(0.0, 0.0, 1.0))), PxVec3(scale / 2, scale * 3, scale / 2));
-			base2->SetKinematic(true);
-			base2->SetColor(color_palette[0]);
-
 			blade1 = new Box(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec3(scale / 7, scale / 3, scale * 3));
 			blade1->SetColor(color_palette[1]);
+			
 			blade2 = new Box(PxTransform(PxVec3(position->x, position->y + 3, position->z + 1)), PxVec3(scale / 7, scale * 3, scale / 3));
 			blade2->SetColor(color_palette[1]);
 
 			joint = new RevoluteJoint(base, PxTransform(PxVec3(0.0f, -2.5f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), blade1, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
-			joint->DriveVelocity(8.0f);
-
 			joint2 = new RevoluteJoint(base, PxTransform(PxVec3(0.0f, -2.5f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), blade2, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
+			
+			joint->DriveVelocity(3.0f);
 
 			scene->AddActor(base);
-			scene->AddActor(base2);
 			scene->AddActor(blade1);
 			scene->AddActor(blade2);
 		}
@@ -66,7 +95,7 @@ namespace PhysicsEngine
 		~Windmill() {};
 	};
 
-	class TrackPiece
+	class Flooring
 	{
 	public:
 		Box* Floor;
@@ -76,7 +105,7 @@ namespace PhysicsEngine
 		Box* Trigger;
 		bool IsMoving;
 
-		TrackPiece(Scene* scene, PxVec3* position, float rotation, float scale, bool corner = 0)
+		Flooring(Scene* scene, PxVec3* position, float rotation, float scale, bool corner = 0)
 		{
 			Floor = new Box(PxTransform(PxVec3(position->x, position->y + 0.3f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 7, scale * 3));
 			Floor->SetColor(color_palette[1]);
@@ -144,8 +173,45 @@ namespace PhysicsEngine
 				}
 			}
 		}
+	};
 
-		~TrackPiece() {};
+	class StartFloor
+	{
+	public:
+		Box* Floor;
+		Box* Left;
+		Box* Right;
+		Box* End;
+		Box* Trigger;
+		bool IsMoving;
+
+		StartFloor(Scene* scene, PxVec3* position, float rotation, float scale, bool startingFloor)
+		{
+			Floor = new Box(PxTransform(PxVec3(position->x, position->y + 0.3f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 7, scale * 3));
+			Floor->SetColor(color_palette[1]);
+			Floor->SetKinematic(true);
+
+			Left = new Box(PxTransform(PxVec3(position->x - (scale * 2) - 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
+			Left->SetColor(color_palette[0]);
+			Left->SetKinematic(true);
+
+			Right = new Box(PxTransform(PxVec3(position->x + (scale * 2) + 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
+			Right->SetColor(color_palette[0]);
+			Right->SetKinematic(true);
+
+			End = new Box(PxTransform(PxVec3(position->x, position->y + 0.8f, position->z + (scale * 3) + 0.2f), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 3, scale / 10));
+			End->SetColor(color_palette[0]);
+			End->SetKinematic(true);
+
+			scene->AddActor(Floor);
+
+			if (startingFloor)
+			{
+				scene->AddActor(Left);
+				scene->AddActor(Right);
+				scene->AddActor(End);
+			}
+		}
 	};
 
 	class TrackPieceRotated
@@ -329,7 +395,25 @@ namespace PhysicsEngine
 		}
 	};
 
-	class BallLift
+	class Ramp
+	{
+	public:
+		Box* ramp;
+
+		Ramp(Scene* scene, PxVec3* position, float scale)
+		{
+			ramp = new Box(PxTransform(position->x - 1.76f, position->y - 0.31f, position->z, PxQuat(0, PxVec3(0.0, 0.0, 1.0))), PxVec3(scale * 4, scale / 2, scale * 3));
+
+			ramp->SetRotation(PxQuat(35, PxVec3(1.0, 0.0, 0.0)));
+
+			ramp->SetKinematic(true);
+			ramp->SetColor(color_palette[1]);
+
+			scene->AddActor(ramp);
+		}
+	};
+
+	class Catapult
 	{
 	public:
 		Box * base;
@@ -338,20 +422,20 @@ namespace PhysicsEngine
 
 		RevoluteJoint* joint;
 
-		bool Spinning = true;
+		bool shoot = false;
 
-		BallLift(Scene* scene, PxVec3* position, PxVec3* rotation, float scale)
+		Catapult(Scene* scene, PxVec3* position, PxVec3* rotation, float scale)
 		{
-			base = new Box(PxTransform(PxVec3(position->x - 3.5, position->y, position->z)), PxVec3(scale / 2, scale * 3, scale / 2));
+			base = new Box(PxTransform(PxVec3(position->x - 3.5, position->y, position->z)), PxVec3(scale / 2, scale*4, scale / 2));
 			base->SetKinematic(true);
 			base->SetColor(color_palette[2]);
 
-			base2 = new Box(PxTransform(PxVec3(position->x + 3.5, position->y, position->z)), PxVec3(scale / 2, scale * 3, scale / 2));
+			base2 = new Box(PxTransform(PxVec3(position->x + 3.5, position->y, position->z)), PxVec3(scale / 2, scale*4, scale / 2));
 			base2->SetKinematic(true);
 			base2->SetColor(color_palette[2]);
 
 			blade1 = new Box(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec3(scale * 3, scale / 10, scale * 4));
-			joint = new RevoluteJoint(base, PxTransform(PxVec3(4.5f, 2.5f, 0.0f), PxQuat(PxPi / 2, PxVec3(1.0f, 0.0f, 0.0f))), blade1, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
+			joint = new RevoluteJoint(base, PxTransform(PxVec3(4.5f, 4.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(1.0f, 0.0f, 0.0f))), blade1, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
 			blade1->SetRotation(PxQuat(0.0f, PxVec3(0.0f, 0.0f, 0.0f)));
 
 			scene->AddActor(base);
@@ -361,61 +445,40 @@ namespace PhysicsEngine
 
 		void Update()
 		{
-			if (Spinning)
-			{
-				joint->DriveVelocity(-6.0f);
-			}
+			if (shoot)
+				joint->DriveVelocity(-10.0f);
 			else
-			{
-				joint->DriveVelocity(1.0f);
-			}
+				joint->DriveVelocity(0.0f);
 		}
 	};
 
-	class SpinnerActivator
+	class CatapultButton
 	{
 	public:
-		Sphere* Button1;
-		Sphere* Button2;
+		Sphere* Button;
 
-		bool Button1Activated = false;
-		bool Button2Activated = false;
+		bool activated = false;
 
-		BallLift* ballLift;
+		Catapult* catapult;
 
-		SpinnerActivator(Scene* scene, BallLift* lift)
+		CatapultButton(Scene* scene, PxVec3* position, Catapult* lift)
 		{
-			ballLift = lift;
+			catapult = lift;
 
-			Button1 = new Sphere(PxTransform(PxVec3(-4.0f, 1.0f, 45.0f)), 0.4f, 1.0f);
-			Button1->SetKinematic(true);
-			Button1->SetColor(color_palette[1]);
-			Button1->SetName("Button1");
-			Button1->SetTrigger(true);
-			scene->AddActor(Button1);
-
-			Button2 = new Sphere(PxTransform(PxVec3(4.0f, 1.0f, 40.0f)), 0.4f, 1.0f);
-			Button2->SetKinematic(true);
-			Button2->SetColor(color_palette[1]);
-			Button2->SetName("Button2");
-			Button2->SetTrigger(true);
-			scene->AddActor(Button2);
+			Button = new Sphere(PxTransform(PxVec3(position->x, position->y, position->z)), 0.4f, 1.0f);
+			Button->SetKinematic(true);
+			Button->SetColor(color_palette[1]);
+			Button->SetName("Button");
+			Button->SetTrigger(true);
+			scene->AddActor(Button);
 		}
 
 		void Update()
 		{
-			if (Button1Activated)
+			if (activated)
 			{
-				Button1->SetColor(color_palette[5]);
-			}
-			if (Button2Activated)
-			{
-				Button2->SetColor(color_palette[5]);
-			}
-
-			if (Button1Activated && Button2Activated)
-			{
-				ballLift->Spinning = false;
+				Button->SetColor(color_palette[2]);
+				catapult->shoot = true;
 			}
 		}
 	};

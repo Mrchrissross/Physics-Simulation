@@ -38,12 +38,12 @@ namespace VisualDebugger
 	void HUDInit();
 	
 	float camSpeed = 5.0f;
+	bool enableCameraMotion;
 
 	///simulation objects
 	Camera* camera;
 	PhysicsEngine::GameScene* scene;
 	PxReal delta_time = 1.f/60.f;
-	PxReal gForceStrength = 20;
 	RenderMode render_mode = NORMAL;
 	const int MAX_KEYS = 256;
 	bool key_state[MAX_KEYS];
@@ -122,6 +122,9 @@ namespace VisualDebugger
 	//Render the scene and perform a single simulation step
 	void RenderScene()
 	{
+		if (scene->ball != nullptr && !enableCameraMotion)
+			camera->setEye(scene->ball->GetPosition() - PxVec3(0.0f, -2.5f, -5.0f));
+
 		//handle pressed keys
 		KeyHold();
 
@@ -186,32 +189,7 @@ namespace VisualDebugger
 	void UserKeyHold(int key){}
 
 	//handle camera control keys
-	void CameraInput(int key)
-	{
-		switch (toupper(key))
-		{
-		case 'W':
-			camera->MoveForward(delta_time * camSpeed);
-			break;
-		case 'S':
-			camera->MoveBackward(delta_time * camSpeed);
-			break;
-		case 'A':
-			camera->MoveLeft(delta_time * camSpeed);
-			break;
-		case 'D':
-			camera->MoveRight(delta_time * camSpeed);
-			break;
-		case 'E':
-			camera->MoveUp(delta_time * camSpeed);
-			break;
-		case 'Q':
-			camera->MoveDown(delta_time * camSpeed);
-			break;
-		default:
-			break;
-		}
-	}
+	void CameraInput(int key){}
 
 	//handle force control keys
 	void ForceInput(int key)
@@ -219,31 +197,57 @@ namespace VisualDebugger
 		if (!scene->GetSelectedActor())
 			return;
 
-		cout << key << endl;
-
-		switch (key)
+		if(enableCameraMotion)
 		{
-		// Force controls on the selected actor
-		case 53: // Numpad(5) : forward
-			scene->GetSelectedActor()->addForce(PxVec3(0,0,-1)*gForceStrength);
-			break;
-		case 50: // Numpad(2) : backward
-			scene->GetSelectedActor()->addForce(PxVec3(0,0,1)*gForceStrength);
-			break;
-		case 49: // Numpad(1) :  left
-			scene->GetSelectedActor()->addForce(PxVec3(-1,0,0)*gForceStrength);
-			break;
-		case 51: // Numpad(3) : right
-			scene->GetSelectedActor()->addForce(PxVec3(1,0,0)*gForceStrength);
-			break;
-		case 54: // Numpad(6) : up
-			scene->GetSelectedActor()->addForce(PxVec3(0,1,0)*gForceStrength);
-			break;
-		case 52: // Numpad(4) : down
-			scene->GetSelectedActor()->addForce(PxVec3(0,-1,0)*gForceStrength);
-			break;
-		default:
-			break;
+			switch (toupper(key))
+			{
+			case 'W':
+				camera->MoveForward(delta_time * 5);
+				break;
+			case 'S':
+				camera->MoveBackward(delta_time * 5);
+				break;
+			case 'A':
+				camera->MoveLeft(delta_time * 5);
+				break;
+			case 'D':
+				camera->MoveRight(delta_time * 5);
+				break;
+			case 'Q':
+				camera->MoveUp(delta_time * 5);
+				break;
+			case 'Z':
+				camera->MoveDown(delta_time * 5);
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+			switch (toupper(key))
+			{
+				case 'W':
+					scene->ball->addForce(PxVec3(0, 0, -1));
+					break;
+				case 'S':
+					scene->ball->addForce(PxVec3(0, 0, 1));
+					break;
+				case 'A':
+					scene->ball->addForce(PxVec3(-1, 0, 0));
+					break;
+				case 'D':
+					scene->ball->addForce(PxVec3(1, 0, 0));
+					break;
+				case 'E':
+					scene->ball->addForce(PxVec3(0, 1, 0));
+					break;
+				case 'Q':
+					scene->ball->addForce(PxVec3(0, -1, 0));
+					break;
+				default:
+					break;
+			}
 		}
 	}
 
@@ -276,8 +280,8 @@ namespace VisualDebugger
 			break;
 			//simulation control
 		case GLUT_KEY_F9:
-			//select next actor
-			scene->SelectNextActor();
+			//enable camera motion
+			enableCameraMotion = !enableCameraMotion;
 			break;
 		case GLUT_KEY_F12:
 			//resect scene
@@ -334,6 +338,7 @@ namespace VisualDebugger
 		int dx = mMouseX - x;
 		int dy = mMouseY - y;
 
+		if(enableCameraMotion)
 		camera->Motion(dx, dy, delta_time);
 
 		mMouseX = x;

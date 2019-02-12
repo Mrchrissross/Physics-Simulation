@@ -90,4 +90,9 @@ namespace VisualDebugger
 	{
 		eye -= PxVec3(0,1,0)*speed*delta_time; 
 	}
+
+	void Camera::setEye(PxVec3 pos)
+	{
+		eye = pos;
+	}
 }

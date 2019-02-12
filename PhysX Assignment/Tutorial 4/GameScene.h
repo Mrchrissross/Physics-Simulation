@@ -10,11 +10,25 @@ namespace PhysicsEngine
 {
 	static const PxVec3 colors_palette[] = 
 	{ 
-		PxVec3(46.f / 255.f,9.f / 255.f,39.f / 255.f), 
-		PxVec3(217.f / 255.f,0.f / 255.f,0.f / 255.f),
-		PxVec3(255.f / 255.f,45.f / 255.f,0.f / 255.f),
-		PxVec3(255.f / 255.f,140.f / 255.f,54.f / 255.f),
-		PxVec3(4.f / 255.f,117.f / 255.f,111.f / 255.f) 
+		PxVec3(	146.f / 255.f, 
+				19.f / 255.f, 
+				75.f / 255.f), 
+
+		PxVec3(	183.f / 255.f, 
+				71.f / 255.f,
+				98.f / 255.f),
+
+		PxVec3(	95.f / 255.f,
+				5.f / 255.f,
+				200.f / 255.f),
+
+		PxVec3(	5.f / 255.f,
+				10.f / 255.f,
+				255.f / 255.f),
+
+		PxVec3(	174.f / 255.f,
+				255.f / 255.f,
+				111.f / 255.f) 
 	};
 
 	class MySimulationEventCallback : public PxSimulationEventCallback
@@ -22,10 +36,9 @@ namespace PhysicsEngine
 	public:
 		//an example variable that will be checked in the main simulation loop
 		bool trigger;
-		TrackPiece* track;
-		SpinnerActivator* activator;
+		CatapultButton* button;
 
-		MySimulationEventCallback(TrackPiece* piece, SpinnerActivator* activ) : trigger(false), track(piece), activator(activ) {}
+		MySimulationEventCallback(CatapultButton* _button) : trigger(false), button(_button) {}
 
 		///Method called when the contact with the trigger object is detected.
 		virtual void onTrigger(PxTriggerPair* pairs, PxU32 count)
@@ -38,45 +51,37 @@ namespace PhysicsEngine
 				{
 					if (pairs[i].otherShape->getGeometryType() != PxGeometryType::eBOX)
 					{
-							//check if eNOTIFY_TOUCH_FOUND trigger
-							if (pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_FOUND)
+						//check if eNOTIFY_TOUCH_FOUND trigger
+						if (pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_FOUND)
+						{
+							cerr << pairs[i].triggerActor->getName() << endl;
+							
+							if (std::strcmp(pairs[i].triggerActor->getName(), "Button") == 0)
+								button->activated = true;
+							
+							// If the ball touches the pole.
+							else if (std::strcmp(pairs[i].triggerActor->getName(), "Pole") == 0)
 							{
-								cerr << pairs[i].triggerActor->getName() << endl;
-
-								if (std::strcmp(pairs[i].triggerActor->getName(), "Elevator") == 0)
-								{
-									track->IsMoving = true;
-								}
-								else if (std::strcmp(pairs[i].triggerActor->getName(), "Button1") == 0)
-								{
-									activator->Button1Activated = true;
-								}
-								else if (std::strcmp(pairs[i].triggerActor->getName(), "Button2") == 0)
-								{
-									activator->Button2Activated = true;
-								}
-								else if (std::strcmp(pairs[i].triggerActor->getName(), "Pole") == 0)
-								{
-									cerr << "WINNER" << endl;
-									pairs[i].otherActor->setGlobalPose(PxTransform(PxVec3(0, 3, 50)));
-									pairs[i].otherActor->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
-								}
-								else
-								{
-									pairs[i].otherActor->setGlobalPose(PxTransform(PxVec3(0, 3, 50)));
-									pairs[i].otherActor->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
-								}
-
-								cerr << "onTrigger::eNOTIFY_TOUCH_FOUND"<< endl;
-								trigger = true;
+								cerr << "WINNER" << endl;
+								pairs[i].otherActor->setGlobalPose(PxTransform(PxVec3(0, 3, 50)));
+								pairs[i].otherActor->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
 							}
-							//check if eNOTIFY_TOUCH_LOST trigger
-							if (pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_LOST)
+
+							// If the ball touches the plane.
+							else
 							{
-								track->IsMoving = false;
-								cerr << "onTrigger::eNOTIFY_TOUCH_LOST" << endl;
-								trigger = false;
+								pairs[i].otherActor->setGlobalPose(PxTransform(PxVec3(0, 3, 50)));
+								pairs[i].otherActor->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
 							}
+
+							cerr << "onTrigger::eNOTIFY_TOUCH_FOUND"<< endl;
+							trigger = true;
+						}
+						//check if eNOTIFY_TOUCH_LOST trigger
+						if (pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_LOST)
+						{
+							cerr << "onTrigger::eNOTIFY_TOUCH_LOST" << endl;
+						}
 						
 					}
 				}
@@ -121,12 +126,6 @@ namespace PhysicsEngine
 		}
 
 		pairFlags = PxPairFlag::eCONTACT_DEFAULT;
-		//enable continous collision detection
-		//		pairFlags |= PxPairFlag::eCCD_LINEAR;
-
-
-		//customise collision filtering here
-		//e.g.
 
 		// trigger the contact callback for pairs (A,B) where 
 		// the filtermask of A contains the ID of B and vice versa.
@@ -135,7 +134,6 @@ namespace PhysicsEngine
 			//trigger onContact callback for this pair of objects
 			pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
 			pairFlags |= PxPairFlag::eNOTIFY_TOUCH_LOST;
-			//			pairFlags |= PxPairFlag::eNOTIFY_CONTACT_POINTS;
 		}
 
 		return PxFilterFlags();
@@ -154,22 +152,24 @@ namespace PhysicsEngine
 		MySimulationEventCallback* my_callback;
 
 		Plane* plane;
-		vector<TrackPiece*> track;
-		vector<TrackPieceRotated*> trackRot;
+		vector <Flooring*> flooring;
+		vector <TrackPieceRotated*> trackRot;
 		FlagPole* flag;
-		Sphere* golfBall;
+		Ball* ball;
 		Windmill* windmill;
 		SpringBox* box;
-		BallLift* lift;
+		Catapult* catapult;
 		Bridge* bridge;
 		Sandpit* sand;
 
-		TrackPiece* corner;
 
-		Cloth* hider;
 		Box* obstacle1;
 		Box* obstacle2;
 
-		SpinnerActivator* activ;
+		
+		Ramp* ramp;
+		Cloth* cloth;
+		CatapultButton* button;
+		StartFloor* startingFloor;
 	};
 }
