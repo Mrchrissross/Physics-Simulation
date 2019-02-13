@@ -148,26 +148,21 @@ namespace PhysicsEngine
 		void SetVisualisation();
 		virtual void Init();
 		virtual void Update();
+		virtual int GetScore();
 
 		MySimulationEventCallback* my_callback;
 
 		Plane* plane;
-		vector <Flooring*> flooring;
-		vector <TrackPieceRotated*> trackRot;
 		FlagPole* flag;
 		Ball* ball;
-		MiniWindmill* miniWindmill;
-		SpringBox* box;
 		Catapult* catapult;
-		Bridge* bridge;
-		Sandpit* sand;
-
-		Box* obstacle1;
-		Box* obstacle2;
 
 		Ramp* ramp;
 		Cloth* cloth;
 		CatapultButton* button;
 		Flooring* startingFloor;
+		vector <Flooring*> flooring;
+		vector <MiniWindmill*> miniWindmills;
+		WobblyPlatform* wobblyPlatform;
 	};
 }

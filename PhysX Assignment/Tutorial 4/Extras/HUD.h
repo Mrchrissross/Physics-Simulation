@@ -29,6 +29,12 @@ namespace VisualDebugger
 			content.push_back(line);
 		}
 
+		///Amend a single line of text
+		void AmendLine(string line)
+		{
+			content[content.size() - 1] = line;
+		}
+
 		///Render the screen
 		void Render()
 		{
@@ -70,6 +76,19 @@ namespace VisualDebugger
 
 			screens.push_back(new HUDScreen(screen_id));
 			screens.back()->AddLine(line);
+		}
+
+		/// Amend a single line to a specific screen
+		void AmendLine(int screen_id, string line)
+		{
+			for (unsigned int i = 0; i < screens.size(); i++)
+			{
+				if (screens[i]->id == screen_id)
+				{
+					screens[i]->AmendLine(line);
+					return;
+				}
+			}
 		}
 
 		///Set the active screen

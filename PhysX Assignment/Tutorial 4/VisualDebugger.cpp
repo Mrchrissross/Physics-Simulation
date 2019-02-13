@@ -95,18 +95,24 @@ namespace VisualDebugger
 		//add an empty screen
 		hud.AddLine(EMPTY, "");
 		//add a help screen
-		hud.AddLine(HELP, " Camera");
-		hud.AddLine(HELP, "    W,S,A,D,E,Q - forward,backward,left,right,up,down");
-		hud.AddLine(HELP, "    mouse + click - change orientation");
-		hud.AddLine(HELP, "    F8 - reset view");
 		hud.AddLine(HELP, "");
-		hud.AddLine(HELP, " Force (applied to the selected actor)");
-		hud.AddLine(HELP, "    5,2,1,3,4,6 - forward,backward,left,right,up,down");
+		hud.AddLine(HELP, "   Press F1 to pause simulation.");
+		hud.AddLine(HELP, "");
+		hud.AddLine(HELP, "");
 		//add a pause screen
 		hud.AddLine(PAUSE, "");
+		hud.AddLine(PAUSE, "   Controls:");
+		hud.AddLine(PAUSE, "");
+		hud.AddLine(PAUSE, "   Ball Movement");
+		hud.AddLine(PAUSE, "      W,S,A,D - forward,backward,left,right");
+		hud.AddLine(PAUSE, "");
+		hud.AddLine(PAUSE, "   Camera Movement");
+		hud.AddLine(PAUSE, "      F9 - Enable Freeview / Disable Freeview");
+		hud.AddLine(PAUSE, "      W,S,A,D,E,Q - forward,backward,left,right,up,down");
+		hud.AddLine(PAUSE, "      mouse + click - change orientation");
 		hud.AddLine(PAUSE, "");
 		hud.AddLine(PAUSE, "");
-		hud.AddLine(PAUSE, "   Pause Simulation. Press F1 to continue.");
+		hud.AddLine(PAUSE, "   Simulation Paused. Press F1 to continue.");
 		//set font size for all screens
 		hud.FontSize(0.018f);
 		//set font color for all screens
@@ -140,6 +146,9 @@ namespace VisualDebugger
 			if (actors.size())
 				Renderer::Render(&actors[0], (PxU32)actors.size());
 		}
+
+		int score = scene->GetScore();
+		hud.AmendLine(HELP, "   Score: " + to_string(score));
 
 		//adjust the HUD state
 		if (hud_show)
@@ -213,10 +222,10 @@ namespace VisualDebugger
 			case 'D':
 				camera->MoveRight(delta_time * 5);
 				break;
-			case 'Q':
+			case 'E':
 				camera->MoveUp(delta_time * 5);
 				break;
-			case 'Z':
+			case 'Q':
 				camera->MoveDown(delta_time * 5);
 				break;
 			default:
@@ -239,12 +248,12 @@ namespace VisualDebugger
 				case 'D':
 					scene->ball->addForce(PxVec3(1, 0, 0));
 					break;
-				case 'E':
+				/*case 'E':
 					scene->ball->addForce(PxVec3(0, 1, 0));
 					break;
 				case 'Q':
 					scene->ball->addForce(PxVec3(0, -1, 0));
-					break;
+					break;*/
 				default:
 					break;
 			}
@@ -275,13 +284,13 @@ namespace VisualDebugger
 			ToggleRenderMode();
 			break;
 		case GLUT_KEY_F8:
-			//reset camera view
-			camera->Reset();
 			break;
 			//simulation control
 		case GLUT_KEY_F9:
 			//enable camera motion
 			enableCameraMotion = !enableCameraMotion;
+			//reset camera view
+			if(!enableCameraMotion) camera->Reset();
 			break;
 		case GLUT_KEY_F12:
 			//resect scene

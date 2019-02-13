@@ -1,13 +1,6 @@
 ﻿  GameScene.cpp
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(66): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(68): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(142): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(146): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(150): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(154): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(410): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(414): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(63): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-  VisualDebugger.cpp
-  Generating Code...
-  Tutorial 4.vcxproj -> C:\Users\Chris Ross\Documents\GitHub\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(74): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(76): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(57): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(85): warning C4244: '=': conversion from 'physx::PxReal' to 'int', possible loss of data
+  Tutorial 4.vcxproj -> C:\Users\Student\Documents\GitHub\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe
