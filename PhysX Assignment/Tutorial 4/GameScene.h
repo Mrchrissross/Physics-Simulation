@@ -156,20 +156,18 @@ namespace PhysicsEngine
 		vector <TrackPieceRotated*> trackRot;
 		FlagPole* flag;
 		Ball* ball;
-		Windmill* windmill;
+		MiniWindmill* miniWindmill;
 		SpringBox* box;
 		Catapult* catapult;
 		Bridge* bridge;
 		Sandpit* sand;
 
-
 		Box* obstacle1;
 		Box* obstacle2;
 
-		
 		Ramp* ramp;
 		Cloth* cloth;
 		CatapultButton* button;
-		StartFloor* startingFloor;
+		Flooring* startingFloor;
 	};
 }

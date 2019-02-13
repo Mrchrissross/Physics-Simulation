@@ -9,7 +9,7 @@ namespace PhysicsEngine
 {
 	static const PxVec3 color_palette[] = {
 		PxVec3(41.f / 255.f, 35.f / 255.f, 56.f / 255.f),
-		PxVec3(82.f / 255.f, 57.f / 255.f, 87.f / 255.f),
+		PxVec3(82.0f / 255.f, 57.0f / 255.f, 87.0f / 255.f),
 		PxVec3(193.f / 255.f, 38.f / 255.f, 78.f / 255.f),
 		PxVec3(255.f / 255.f, 207.f / 255.f, 164.f / 255.f),
 		PxVec3(4.f / 255.f,117.f / 255.f,111.f / 255.f) };
@@ -50,18 +50,17 @@ namespace PhysicsEngine
 		}
 	};
 
-	class Windmill
+	class MiniWindmill
 	{
 	public:
 		Box* base;
-		Box* base2;
 		Box* blade1;
 		Box* blade2;
 
 		RevoluteJoint* joint;
 		RevoluteJoint* joint2;
 
-		Windmill(Scene* scene, PxVec3* position, bool side, float scale)
+		MiniWindmill(Scene* scene, PxVec3* position, bool side, float scale)
 		{
 			if (side)
 				base = new Box(PxTransform(PxVec3(position->x - 1.9, position->y, position->z), PxQuat(40, PxVec3(0.0, 0.0, 1.0))), PxVec3(scale / 2, scale * 3, scale / 2));
@@ -91,122 +90,38 @@ namespace PhysicsEngine
 		{
 			blade2->SetRotation(blade1->GetRotation());
 		}
-
-		~Windmill() {};
 	};
 
 	class Flooring
 	{
 	public:
 		Box* Floor;
-		Box* WallLeft;
-		Box* WallRight;
-		Box* WallTop;
-		Box* Trigger;
-		bool IsMoving;
-
-		Flooring(Scene* scene, PxVec3* position, float rotation, float scale, bool corner = 0)
-		{
-			Floor = new Box(PxTransform(PxVec3(position->x, position->y + 0.3f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 7, scale * 3));
-			Floor->SetColor(color_palette[1]);
-			Floor->SetKinematic(true);
-
-			Trigger = new Box(PxTransform(PxVec3(position->x, position->y + 0.6f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 40, scale * 3));
-			Trigger->SetColor(color_palette[0]);
-			Trigger->SetKinematic(true);
-			Trigger->SetName("Elevator");
-
-			WallLeft = new Box(PxTransform(PxVec3(position->x - (scale * 2) - 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
-			WallLeft->SetColor(color_palette[0]);
-			WallLeft->SetKinematic(true);
-
-			WallRight = new Box(PxTransform(PxVec3(position->x + (scale * 2) + 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
-			WallRight->SetColor(color_palette[0]);
-			WallRight->SetKinematic(true);
-
-			WallTop = new Box(PxTransform(PxVec3(position->x, position->y + 0.8f, position->z - (scale * 3) + 0.2f), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 3, scale / 10));
-			WallTop->SetColor(color_palette[0]);
-			WallTop->SetKinematic(true);
-
-			if (corner == true)
-			{
-				scene->AddActor(Floor);
-				scene->AddActor(Trigger);
-				Trigger->SetTrigger(true);
-
-				scene->AddActor(WallTop);
-				scene->AddActor(WallLeft);
-			}
-			else
-			{
-				scene->AddActor(Floor);
-				scene->AddActor(WallLeft);
-				scene->AddActor(WallRight);
-			}
-		}
-
-		void Update()
-		{
-			if (Floor->GetPosition().y >= 10.25f)
-			{
-				IsMoving = false;
-			}
-
-			if (IsMoving)
-			{
-				if (Floor->GetPosition().y <= 10.25f)
-				{
-					Floor->SetPosition(Floor->GetPosition() + PxVec3(0, 0.02f, 0));
-					WallTop->SetPosition(WallTop->GetPosition() + PxVec3(0, 0.02f, 0));
-					WallLeft->SetPosition(WallLeft->GetPosition() + PxVec3(0, 0.02f, 0));
-					Trigger->SetPosition(Trigger->GetPosition() + PxVec3(0, 0.02f, 0));
-				}
-			}
-			else
-			{
-				if (Floor->GetPosition().y >= 0.0f)
-				{
-					Floor->SetPosition(Floor->GetPosition() - PxVec3(0, 0.02f, 0));
-					WallTop->SetPosition(WallTop->GetPosition() - PxVec3(0, 0.02f, 0));
-					WallLeft->SetPosition(WallLeft->GetPosition() - PxVec3(0, 0.02f, 0));
-					Trigger->SetPosition(Trigger->GetPosition() - PxVec3(0, 0.02f, 0));
-				}
-			}
-		}
-	};
-
-	class StartFloor
-	{
-	public:
-		Box* Floor;
 		Box* Left;
 		Box* Right;
 		Box* End;
-		Box* Trigger;
-		bool IsMoving;
 
-		StartFloor(Scene* scene, PxVec3* position, float rotation, float scale, bool startingFloor)
+		Flooring(Scene* scene, PxVec3* position, float rotation, float scale, bool startingFloor)
 		{
 			Floor = new Box(PxTransform(PxVec3(position->x, position->y + 0.3f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 7, scale * 3));
 			Floor->SetColor(color_palette[1]);
 			Floor->SetKinematic(true);
-
-			Left = new Box(PxTransform(PxVec3(position->x - (scale * 2) - 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
-			Left->SetColor(color_palette[0]);
-			Left->SetKinematic(true);
-
-			Right = new Box(PxTransform(PxVec3(position->x + (scale * 2) + 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
-			Right->SetColor(color_palette[0]);
-			Right->SetKinematic(true);
-
-			End = new Box(PxTransform(PxVec3(position->x, position->y + 0.8f, position->z + (scale * 3) + 0.2f), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 3, scale / 10));
-			End->SetColor(color_palette[0]);
-			End->SetKinematic(true);
 
 			scene->AddActor(Floor);
 
 			if (startingFloor)
 			{
+				Left = new Box(PxTransform(PxVec3(position->x - (scale * 2) - 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
+				Left->SetColor(color_palette[0]);
+				Left->SetKinematic(true);
+
+				Right = new Box(PxTransform(PxVec3(position->x + (scale * 2) + 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
+				Right->SetColor(color_palette[0]);
+				Right->SetKinematic(true);
+
+				End = new Box(PxTransform(PxVec3(position->x, position->y + 0.8f, position->z + (scale * 3) + 0.2f), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 3, scale / 10));
+				End->SetColor(color_palette[0]);
+				End->SetKinematic(true);
+
 				scene->AddActor(Left);
 				scene->AddActor(Right);
 				scene->AddActor(End);
@@ -418,7 +333,7 @@ namespace PhysicsEngine
 	public:
 		Box * base;
 		Box* base2;
-		Box* blade1;
+		Box* body;
 
 		RevoluteJoint* joint;
 
@@ -426,21 +341,17 @@ namespace PhysicsEngine
 
 		Catapult(Scene* scene, PxVec3* position, PxVec3* rotation, float scale)
 		{
-			base = new Box(PxTransform(PxVec3(position->x - 3.5, position->y, position->z)), PxVec3(scale / 2, scale*4, scale / 2));
+			base = new Box(PxTransform(PxVec3(position->x - 1.5f, position->y, position->z)), PxVec3(scale / 2, scale*4, scale / 2));
 			base->SetKinematic(true);
 			base->SetColor(color_palette[2]);
 
-			base2 = new Box(PxTransform(PxVec3(position->x + 3.5, position->y, position->z)), PxVec3(scale / 2, scale*4, scale / 2));
-			base2->SetKinematic(true);
-			base2->SetColor(color_palette[2]);
+			body = new Box(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec3(1.0f, scale / 10, scale * 4));
 
-			blade1 = new Box(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec3(scale * 3, scale / 10, scale * 4));
-			joint = new RevoluteJoint(base, PxTransform(PxVec3(4.5f, 4.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(1.0f, 0.0f, 0.0f))), blade1, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
-			blade1->SetRotation(PxQuat(0.0f, PxVec3(0.0f, 0.0f, 0.0f)));
+			joint = new RevoluteJoint(base, PxTransform(PxVec3(2.5f, 4.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(1.0f, 0.0f, 0.0f))), body, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
+			body->SetRotation(PxQuat(0.0f, PxVec3(0.0f, 0.0f, 0.0f)));
 
 			scene->AddActor(base);
-			scene->AddActor(base2);
-			scene->AddActor(blade1);
+			scene->AddActor(body);
 		}
 
 		void Update()
