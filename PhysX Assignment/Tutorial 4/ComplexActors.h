@@ -27,6 +27,7 @@ namespace PhysicsEngine
 	public:
 		Sphere* ball;
 		PxReal gForceStrength = 20;
+		bool addScore;
 
 		Ball(Scene* scene, PxVec3* position)
 		{

@@ -36,9 +36,10 @@ namespace PhysicsEngine
 	public:
 		//an example variable that will be checked in the main simulation loop
 		bool trigger;
+		Ball* ball;
 		CatapultButton* button;
 
-		MySimulationEventCallback(CatapultButton* _button) : trigger(false), button(_button) {}
+		MySimulationEventCallback(Ball* _ball, CatapultButton* _button) : trigger(false), ball(_ball), button(_button) {}
 
 		///Method called when the contact with the trigger object is detected.
 		virtual void onTrigger(PxTriggerPair* pairs, PxU32 count)
@@ -69,11 +70,8 @@ namespace PhysicsEngine
 
 							// If the ball touches the plane.
 							else
-							{
-								pairs[i].otherActor->setGlobalPose(PxTransform(PxVec3(0, 3, 50)));
-								pairs[i].otherActor->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
-							}
-
+								ball->addScore = true;
+						
 							cerr << "onTrigger::eNOTIFY_TOUCH_FOUND"<< endl;
 							trigger = true;
 						}
@@ -149,6 +147,7 @@ namespace PhysicsEngine
 		virtual void Init();
 		virtual void Update();
 		virtual int GetScore();
+		virtual vector <int> GetScoreBoard();
 
 		MySimulationEventCallback* my_callback;
 

@@ -2,8 +2,9 @@
 
 namespace PhysicsEngine
 {
-
+	
 	static int score = 0;
+	static vector <int> scores;
 
 	void GameScene::SetVisualisation()
 	{
@@ -65,7 +66,7 @@ namespace PhysicsEngine
 		catapult = new Catapult(this, new PxVec3(0.0f, -2.5f, 33.7f), new PxVec3(0, 0, 0), 1.0f);
 		button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult);
 
-		my_callback = new MySimulationEventCallback(button);
+		my_callback = new MySimulationEventCallback(ball, button);
 		px_scene->setSimulationEventCallback(my_callback);
 		
 		/* flag = new FlagPole(this, new PxVec3(38.0f, 10.5f, -18.0f), 0.0f, 1.0f);*/
@@ -85,10 +86,22 @@ namespace PhysicsEngine
 			score = -ball->GetPosition().z + 38;
 		else
 			score = 0;
+
+		if (ball->addScore)
+		{
+			scores.push_back(score);
+			ball->Reset();
+			ball->addScore = false;
+		}
 	}
 
 	int GameScene::GetScore()
 	{
 		return score;
+	}
+
+	vector <int> GameScene::GetScoreBoard()
+	{
+		return scores;
 	}
 }

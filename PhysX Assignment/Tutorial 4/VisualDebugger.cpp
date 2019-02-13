@@ -39,6 +39,7 @@ namespace VisualDebugger
 	
 	float camSpeed = 5.0f;
 	bool enableCameraMotion;
+	int size;
 
 	///simulation objects
 	Camera* camera;
@@ -105,6 +106,7 @@ namespace VisualDebugger
 		hud.AddLine(PAUSE, "");
 		hud.AddLine(PAUSE, "   Ball Movement");
 		hud.AddLine(PAUSE, "      W,S,A,D - forward,backward,left,right");
+		hud.AddLine(PAUSE, "      R - Reset ball (adds score)");
 		hud.AddLine(PAUSE, "");
 		hud.AddLine(PAUSE, "   Camera Movement");
 		hud.AddLine(PAUSE, "      F9 - Enable Freeview / Disable Freeview");
@@ -113,6 +115,7 @@ namespace VisualDebugger
 		hud.AddLine(PAUSE, "");
 		hud.AddLine(PAUSE, "");
 		hud.AddLine(PAUSE, "   Simulation Paused. Press F1 to continue.");
+		hud.AddLine(PAUSE, "");
 		//set font size for all screens
 		hud.FontSize(0.018f);
 		//set font color for all screens
@@ -150,6 +153,15 @@ namespace VisualDebugger
 		int score = scene->GetScore();
 		hud.AmendLine(HELP, "   Score: " + to_string(score));
 
+		vector <int> scores = scene->GetScoreBoard();
+
+		if (size != scores.size())
+		{
+			hud.AddLine(PAUSE, "");
+			hud.AmendLine(PAUSE, "   Score " + to_string(scores.size()) + " was " + to_string(scores[scores.size() - 1]));
+			size = scores.size();
+		}
+
 		//adjust the HUD state
 		if (hud_show)
 		{
@@ -176,7 +188,8 @@ namespace VisualDebugger
 	{
 		switch (toupper(key))
 		{
-		case 'R': // Replace 
+		case 'R':
+			scene->ball->addScore = true;
 			break;
 		default:
 			break;
@@ -248,10 +261,7 @@ namespace VisualDebugger
 				case 'D':
 					scene->ball->addForce(PxVec3(1, 0, 0));
 					break;
-				/*case 'E':
-					scene->ball->addForce(PxVec3(0, 1, 0));
-					break;
-				case 'Q':
+					/*case 'Q':
 					scene->ball->addForce(PxVec3(0, -1, 0));
 					break;*/
 				default:
