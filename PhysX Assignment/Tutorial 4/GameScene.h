@@ -152,7 +152,6 @@ namespace PhysicsEngine
 		MySimulationEventCallback* my_callback;
 
 		Plane* plane;
-		FlagPole* flag;
 		Ball* ball;
 		Catapult* catapult;
 

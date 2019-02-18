@@ -1,3 +1,9 @@
-﻿  VisualDebugger.cpp
-c:\users\chris ross\documents\github\physics-simulation\physx assignment\tutorial 4\visualdebugger.cpp(162): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  Tutorial 4.vcxproj -> C:\Users\Chris Ross\Documents\GitHub\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe
+﻿  GameScene.cpp
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(75): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(77): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(59): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(86): warning C4244: '=': conversion from 'physx::PxReal' to 'int', possible loss of data
+  VisualDebugger.cpp
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\visualdebugger.cpp(162): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  Tutorial 4.vcxproj -> C:\Users\Student\Documents\GitHub\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe

@@ -153,29 +153,6 @@ namespace PhysicsEngine
 		}
 	};
 
-	class FlagPole
-	{
-	public:
-		Box* Pole;
-		Cloth* Flag;
-
-		FlagPole(Scene* scene, PxVec3* position, float rotation, float scale)
-		{
-			Pole = new Box(PxTransform(PxVec3(position->x, position->y + 3, position->z)), PxVec3(scale / 10, scale * 3, scale / 10));
-			Pole->SetKinematic(true);
-			Pole->SetTrigger(true);
-			Pole->SetName("Pole");
-
-			Flag = new Cloth(PxTransform(PxVec3(position->x, position->y + 6, position->z), PxQuat(rotation, PxVec3(0.0, 1.0, 0.0))), PxVec2(1.5f, 2.f), 20, 20);
-			Flag->SetColor(color_palette[1]);
-
-			scene->AddActor(Flag);
-			scene->AddActor(Pole);
-		}
-
-		~FlagPole() {};
-	};
-
 	class WobblyPlatform
 	{
 	public:

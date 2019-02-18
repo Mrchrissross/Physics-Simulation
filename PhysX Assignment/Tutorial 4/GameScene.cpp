@@ -40,6 +40,7 @@ namespace PhysicsEngine
 		{
 			if ((i % 6) == 0 && i != 0)
 			{
+
 				miniwinds++;
 				flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.0f, i * -24.0f), 0.0f, 3.0f, false, false, true));
 
@@ -69,7 +70,6 @@ namespace PhysicsEngine
 		my_callback = new MySimulationEventCallback(ball, button);
 		px_scene->setSimulationEventCallback(my_callback);
 		
-		/* flag = new FlagPole(this, new PxVec3(38.0f, 10.5f, -18.0f), 0.0f, 1.0f);*/
 	}
 
 	void GameScene::Update()
