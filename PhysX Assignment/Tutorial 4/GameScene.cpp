@@ -5,6 +5,10 @@ namespace PhysicsEngine
 	
 	static int score = 0;
 	static vector <int> scores;
+	static int height = 0;
+	static vector <int> heights;
+	static float velocity = 0;
+	static vector <float> velocities;
 
 	void GameScene::SetVisualisation()
 	{
@@ -83,13 +87,31 @@ namespace PhysicsEngine
 		catapult->Update();
 
 		if ((-ball->GetPosition().z + 38) >= 0)
+		{
 			score = -ball->GetPosition().z + 38;
+
+			// Determine Max Height
+			if (height < ball->GetPosition().y)
+				height = ball->GetPosition().y;
+		
+			if (-velocity > ball->GetBall()->GetVelocity().z)
+				velocity = -ball->GetBall()->GetVelocity().z;
+		}
 		else
 			score = 0;
+
+		if (score > 5)
+			button->activated = false;
 
 		if (ball->addScore)
 		{
 			scores.push_back(score);
+			heights.push_back(height);
+			velocities.push_back(velocity);
+
+			height   = 0;
+			velocity = 0;
+
 			ball->Reset();
 			ball->addScore = false;
 		}
@@ -103,5 +125,25 @@ namespace PhysicsEngine
 	vector <int> GameScene::GetScoreBoard()
 	{
 		return scores;
+	}
+
+	int GameScene::GetHeight()
+	{
+		return height;
+	}
+
+	vector <int> GameScene::GetHeightBoard()
+	{
+		return heights;
+	}
+	
+	float GameScene::GetVelocity()
+	{
+		return velocity;
+	}
+
+	vector <float> GameScene::GetVelocityBoard()
+	{
+		return velocities;
 	}
 }

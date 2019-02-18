@@ -24,17 +24,37 @@ namespace PhysicsEngine
 
 	class Ball
 	{
+
 	public:
 		Sphere* ball;
-		PxReal gForceStrength = 20;
+		PxReal force = 20;
+		PxTransform orginalPosition;
+		PxMaterial* material;
+
 		bool addScore;
+
+		Capsule* capRight;
+		Capsule* capLeft;
 
 		Ball(Scene* scene, PxVec3* position)
 		{
-			ball = new Sphere(PxTransform(PxVec3(position->x, position->y, position->z)), 0.3f, 15.0f);
-			ball->SetName("Ball");
+			orginalPosition = PxTransform(PxVec3(position->x, position->y, position->z));
 
+			ball = new Sphere(PxTransform(PxVec3(position->x, position->y, position->z)), 0.3f, 15.0f);
+			material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, 0.8f);
+			ball->SetMaterial(material);
+			ball->SetName("Ball");
 			scene->AddActor(ball);
+
+			float capSize = 0.15f;
+			
+			capRight = new Capsule(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec2(capSize, capSize), 15.0f);
+			RevoluteJoint* joint = new RevoluteJoint(ball, PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), capRight, PxTransform(PxVec3(0.25f, 0.0f, 0.0f)));
+			scene->AddActor(capRight);
+			
+			capLeft = new Capsule(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec2(capSize, capSize), 15.0f);
+			joint = new RevoluteJoint(ball, PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), capLeft, PxTransform(PxVec3(-0.25f, 0.0f, 0.0f)));
+			scene->AddActor(capLeft);
 		}
 
 		Sphere* GetBall()
@@ -49,14 +69,19 @@ namespace PhysicsEngine
 
 		void Reset() 
 		{
-			((PxRigidDynamic*)ball->GetPxActor())->setGlobalPose(PxTransform(PxVec3(0, 3, 50)));
+			((PxRigidDynamic*)ball->GetPxActor())->setGlobalPose(orginalPosition);
+			((PxRigidDynamic*)capRight->GetPxActor())->setGlobalPose(orginalPosition);
+			((PxRigidDynamic*)capLeft->GetPxActor())->setGlobalPose(orginalPosition);
 			ball->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
+			capRight->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
+			capLeft->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
 		}
 
-		void addForce(PxVec3 force)
+		void addForce(PxVec3 _force)
 		{
-			ball->GetRigidBody()->addForce(force * gForceStrength);
+			ball->GetRigidBody()->addForce(_force * force);
 		}
+	
 	};
 
 	class MiniWindmill
@@ -118,13 +143,13 @@ namespace PhysicsEngine
 			
 			if (slow)
 			{
-				material = scene->GetScene()->getPhysics().createMaterial(20.0f, 20.0f, 0.0f);
+				material = scene->GetScene()->getPhysics().createMaterial(0.0f, 20.0f, 0.0f);
 				Floor->SetColor(color_palette[10]);
 			}
 
 			if (bouncy)
 			{
-				material = scene->GetScene()->getPhysics().createMaterial(0.0f, 0.0f, 2.0f);
+				material = scene->GetScene()->getPhysics().createMaterial(0.0f, 0.0f, 1.5f);
 				Floor->SetColor(color_palette[9]);
 			}
 
@@ -157,41 +182,35 @@ namespace PhysicsEngine
 	{
 	public:
 		Box* box;
-		Box* side1;
-		vector<DistanceJoint*> joints1;
+		Box* platform;
+		vector<DistanceJoint*> joints;
 
-		float springDist = 0.1f;
-		float damping = 9.0f;
-		float stiffness = 300.f;
-
-		PxMaterial* bounceMat;
+		float distance = -0.15f;
+		float damping = 1.0f;
+		float stiffness = 100.0f;
 
 		WobblyPlatform(Scene* scene, PxVec3* position, float rotation, float scale)
 		{
-			bounceMat = scene->GetScene()->getPhysics().createMaterial(1.0f, 1.0f, 2.5f);
-
 			box = new Box(PxTransform(PxVec3(position->x, position->y + 0.5f, position->z)), PxVec3(scale / 1.0f, scale / 3.5f, scale / 1.0f));
 			box->SetKinematic(true);
 
-			side1 = new Box(PxTransform(PxVec3(position->x, position->y + 0.5f + 0.7f, position->z)), PxVec3(scale / 1.0f, scale / 10.0f, scale / 1.0f));
+			platform = new Box(PxTransform(PxVec3(position->x, position->y + 0.5f + 0.7f, position->z)), PxVec3(scale / 1.0f, scale / 10.0f, scale / 1.0f));
 
-			joints1.push_back(new DistanceJoint(box, PxTransform(PxVec3(1.0f, springDist, 1.0f)), side1, PxTransform(PxVec3(1, -1, 1))));
-			joints1.push_back(new DistanceJoint(box, PxTransform(PxVec3(1.0f, springDist, -1.0f)), side1, PxTransform(PxVec3(1, -1, -1))));
-			joints1.push_back(new DistanceJoint(box, PxTransform(PxVec3(-1.0f, springDist, 1.0f)), side1, PxTransform(PxVec3(-1, -1, 1))));
-			joints1.push_back(new DistanceJoint(box, PxTransform(PxVec3(-1.0f, springDist, -1.0f)), side1, PxTransform(PxVec3(-1, -1, -1))));
+			joints.push_back(new DistanceJoint(box, PxTransform(PxVec3(1.0f, distance, 1.0f)), platform, PxTransform(PxVec3(1, -1, 1))));
+			joints.push_back(new DistanceJoint(box, PxTransform(PxVec3(1.0f, distance, -1.0f)), platform, PxTransform(PxVec3(1, -1, -1))));
+			joints.push_back(new DistanceJoint(box, PxTransform(PxVec3(-1.0f, distance, 1.0f)), platform, PxTransform(PxVec3(-1, -1, 1))));
+			joints.push_back(new DistanceJoint(box, PxTransform(PxVec3(-1.0f, distance, -1.0f)), platform, PxTransform(PxVec3(-1, -1, -1))));
 
-			for (DistanceJoint* joint : joints1)
+			for (DistanceJoint* joint : joints)
 			{
-				joint->Damping(2.0f);
-				joint->Stiffness(15.0f);
+				joint->Damping(damping);
+				joint->Stiffness(stiffness);
 			}
 
-			side1->SetColor(color_palette[6]);
+			platform->SetColor(color_palette[6]);
 
 			scene->AddActor(box);
-			scene->AddActor(side1);
-
-
+			scene->AddActor(platform);
 		}
 	};
 
@@ -233,7 +252,6 @@ namespace PhysicsEngine
 			body = new Box(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec3(1.0f, scale / 10, scale * 4));
 
 			joint = new RevoluteJoint(base, PxTransform(PxVec3(2.5f, 4.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(1.0f, 0.0f, 0.0f))), body, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
-			body->SetRotation(PxQuat(0.0f, PxVec3(0.0f, 0.0f, 0.0f)));
 
 			scene->AddActor(base);
 			scene->AddActor(body);
@@ -244,7 +262,10 @@ namespace PhysicsEngine
 			if (shoot)
 				joint->DriveVelocity(-10.0f);
 			else
+			{
 				joint->DriveVelocity(0.0f);
+				body->SetRotation(PxQuat(0.0f, PxVec3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 	};
 
@@ -275,6 +296,11 @@ namespace PhysicsEngine
 			{
 				Button->SetColor(color_palette[3]);
 				catapult->shoot = true;
+			}
+			else
+			{
+				Button->SetColor(color_palette[4]);
+				catapult->shoot = false;
 			}
 		}
 	};

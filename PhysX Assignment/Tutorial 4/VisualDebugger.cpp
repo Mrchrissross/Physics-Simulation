@@ -151,14 +151,19 @@ namespace VisualDebugger
 		}
 
 		int score = scene->GetScore();
-		hud.AmendLine(HELP, "   Score: " + to_string(score));
+		int height = scene->GetHeight();
+		int velocity = scene->GetVelocity();
+
+		hud.AmendLine(HELP, "   Distance: " + to_string(score) + " -  Height: " + to_string(height) + " -  Speed: " + to_string(velocity));
 
 		vector <int> scores = scene->GetScoreBoard();
+		vector <int> heights = scene->GetHeightBoard();
+		vector <float> velocities = scene->GetVelocityBoard();
 
 		if (size != scores.size())
 		{
 			hud.AddLine(PAUSE, "");
-			hud.AmendLine(PAUSE, "   Score " + to_string(scores.size()) + " was " + to_string(scores[scores.size() - 1]));
+			hud.AmendLine(PAUSE, "   " + to_string(scores.size()) + ". Distance: " + to_string(scores[scores.size() - 1]) + ". Height: " + to_string(heights[heights.size() - 1]) + ". Speed: " + to_string(int(velocities[velocities.size() - 1])));
 			size = scores.size();
 		}
 

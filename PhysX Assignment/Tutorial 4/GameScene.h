@@ -57,16 +57,9 @@ namespace PhysicsEngine
 						{
 							cerr << pairs[i].triggerActor->getName() << endl;
 							
+							//If the ball touches the button.
 							if (std::strcmp(pairs[i].triggerActor->getName(), "Button") == 0)
 								button->activated = true;
-							
-							// If the ball touches the pole.
-							else if (std::strcmp(pairs[i].triggerActor->getName(), "Pole") == 0)
-							{
-								cerr << "WINNER" << endl;
-								pairs[i].otherActor->setGlobalPose(PxTransform(PxVec3(0, 3, 50)));
-								pairs[i].otherActor->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
-							}
 
 							// If the ball touches the plane.
 							else
@@ -147,16 +140,19 @@ namespace PhysicsEngine
 		virtual void Init();
 		virtual void Update();
 		virtual int GetScore();
+		virtual int GetHeight();
+		virtual float GetVelocity();
 		virtual vector <int> GetScoreBoard();
+		virtual vector <int> GetHeightBoard();
+		virtual vector <float> GetVelocityBoard();
 
 		MySimulationEventCallback* my_callback;
 
 		Plane* plane;
 		Ball* ball;
-		Catapult* catapult;
-
 		Ramp* ramp;
 		Cloth* cloth;
+		Catapult* catapult;
 		CatapultButton* button;
 		Flooring* startingFloor;
 		vector <Flooring*> flooring;

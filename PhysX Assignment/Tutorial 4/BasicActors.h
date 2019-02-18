@@ -177,7 +177,6 @@ namespace PhysicsEngine
 
 		void DriveVelocity(PxReal value)
 		{
-			//wake up the attached actors
 			PxRigidDynamic *actor_0, *actor_1;
 			((PxRevoluteJoint*)joint)->getActors((PxRigidActor*&)actor_0, (PxRigidActor*&)actor_1);
 			if (actor_0)
@@ -227,7 +226,7 @@ namespace PhysicsEngine
 				{
 					PxU32 offset = i + j*(width+1);
 					vertices[offset].pos = PxVec3(w_step*i,0.f,h_step*j);
-					if (fix_top && (i == 0)) //fix the top row of vertices
+					if (fix_top && (i == 0))
 						vertices[offset].invWeight = 0.f;
 					else
 						vertices[offset].invWeight = 1.f;
