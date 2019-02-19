@@ -65,10 +65,10 @@ namespace PhysicsEngine
 		((PxCloth*)cloth->GetPxActor())->setStretchConfig(PxClothFabricPhaseType::eSHEARING, PxClothStretchConfig(0.2f));
 		AddActor(cloth);
 
-		ramp = new Ramp(this, new PxVec3(1.75f, 0.45f, 42.5f), 1.0f);
-		wobblyPlatform = new WobblyPlatform(this, new PxVec3(0.0f, 0.4f, 39.0f), 0.0f, 1.0f);
+		ramp = new Ramp(this, new PxVec3(1.75f, 0.45f, 43.8f), 1.45f);
+		wobblyPlatform = new WobblyPlatform(this, new PxVec3(0.0f, 1.2f, 39.0f), 0.0f, 1.0f);
 
-		catapult = new Catapult(this, new PxVec3(0.0f, -2.5f, 33.7f), new PxVec3(0, 0, 0), 1.0f);
+		catapult = new Catapult(this, new PxVec3(0.0f, -1.75f, 33.5f), 1.0f);
 		button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult);
 
 		my_callback = new MySimulationEventCallback(ball, button);
@@ -117,33 +117,38 @@ namespace PhysicsEngine
 		}
 	}
 
-	int GameScene::GetScore()
-	{
-		return score;
-	}
+	#pragma region Scoring
 
-	vector <int> GameScene::GetScoreBoard()
-	{
-		return scores;
-	}
+		int GameScene::GetScore()
+		{
+			return score;
+		}
 
-	int GameScene::GetHeight()
-	{
-		return height;
-	}
+		vector <int> GameScene::GetScoreBoard()
+		{
+			return scores;
+		}
 
-	vector <int> GameScene::GetHeightBoard()
-	{
-		return heights;
-	}
+		int GameScene::GetHeight()
+		{
+			return height;
+		}
+
+		vector <int> GameScene::GetHeightBoard()
+		{
+			return heights;
+		}
 	
-	float GameScene::GetVelocity()
-	{
-		return velocity;
-	}
+		float GameScene::GetVelocity()
+		{
+			return velocity;
+		}
 
-	vector <float> GameScene::GetVelocityBoard()
-	{
-		return velocities;
-	}
+		vector <float> GameScene::GetVelocityBoard()
+		{
+			return velocities;
+		}
+
+	#pragma endregion
+
 }

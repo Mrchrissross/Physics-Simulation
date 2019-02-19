@@ -108,6 +108,10 @@ namespace VisualDebugger
 		hud.AddLine(PAUSE, "      W,S,A,D - forward,backward,left,right");
 		hud.AddLine(PAUSE, "      R - Reset ball (adds score)");
 		hud.AddLine(PAUSE, "");
+		hud.AddLine(PAUSE, "   Catapult Movement");
+		hud.AddLine(PAUSE, "      1,3 - left,right");
+		hud.AddLine(PAUSE, "      2 - Reset catapult");
+		hud.AddLine(PAUSE, "");
 		hud.AddLine(PAUSE, "   Camera Movement");
 		hud.AddLine(PAUSE, "      F9 - Enable Freeview / Disable Freeview");
 		hud.AddLine(PAUSE, "      W,S,A,D,E,Q - forward,backward,left,right,up,down");
@@ -266,9 +270,15 @@ namespace VisualDebugger
 				case 'D':
 					scene->ball->addForce(PxVec3(1, 0, 0));
 					break;
-					/*case 'Q':
-					scene->ball->addForce(PxVec3(0, -1, 0));
-					break;*/
+				case '1':
+					scene->catapult->Move(PxVec3(-1, 0, 0));
+					break;
+				case '2':
+					scene->catapult->Reset();
+					break;
+				case '3':
+					scene->catapult->Move(PxVec3(1, 0, 0));
+					break;
 				default:
 					break;
 			}

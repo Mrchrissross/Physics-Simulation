@@ -315,6 +315,7 @@ namespace PhysicsEngine
 
 		Update();
 
+
 		px_scene->simulate(dt);
 		px_scene->fetchResults(true);
 	}

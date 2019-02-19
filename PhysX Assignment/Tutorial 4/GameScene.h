@@ -50,8 +50,10 @@ namespace PhysicsEngine
 				//filter out contact with the planes
 				if (pairs[i].otherShape->getGeometryType() != PxGeometryType::ePLANE)
 				{
+
 					if (pairs[i].otherShape->getGeometryType() != PxGeometryType::eBOX)
 					{
+
 						//check if eNOTIFY_TOUCH_FOUND trigger
 						if (pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_FOUND)
 						{
@@ -75,6 +77,7 @@ namespace PhysicsEngine
 						}
 						
 					}
+
 				}
 			}
 		}

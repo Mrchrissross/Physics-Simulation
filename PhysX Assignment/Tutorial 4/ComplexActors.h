@@ -28,7 +28,7 @@ namespace PhysicsEngine
 	public:
 		Sphere* ball;
 		PxReal force = 20;
-		PxTransform orginalPosition;
+		PxTransform originalPosition;
 		PxMaterial* material;
 
 		bool addScore;
@@ -38,7 +38,7 @@ namespace PhysicsEngine
 
 		Ball(Scene* scene, PxVec3* position)
 		{
-			orginalPosition = PxTransform(PxVec3(position->x, position->y, position->z));
+			originalPosition = PxTransform(PxVec3(position->x, position->y, position->z));
 
 			ball = new Sphere(PxTransform(PxVec3(position->x, position->y, position->z)), 0.3f, 15.0f);
 			material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, 0.8f);
@@ -46,7 +46,7 @@ namespace PhysicsEngine
 			ball->SetName("Ball");
 			scene->AddActor(ball);
 
-			float capSize = 0.15f;
+			/*float capSize = 0.15f;
 			
 			capRight = new Capsule(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec2(capSize, capSize), 15.0f);
 			RevoluteJoint* joint = new RevoluteJoint(ball, PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), capRight, PxTransform(PxVec3(0.25f, 0.0f, 0.0f)));
@@ -54,7 +54,7 @@ namespace PhysicsEngine
 			
 			capLeft = new Capsule(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec2(capSize, capSize), 15.0f);
 			joint = new RevoluteJoint(ball, PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), capLeft, PxTransform(PxVec3(-0.25f, 0.0f, 0.0f)));
-			scene->AddActor(capLeft);
+			scene->AddActor(capLeft);*/
 		}
 
 		Sphere* GetBall()
@@ -69,12 +69,12 @@ namespace PhysicsEngine
 
 		void Reset() 
 		{
-			((PxRigidDynamic*)ball->GetPxActor())->setGlobalPose(orginalPosition);
-			((PxRigidDynamic*)capRight->GetPxActor())->setGlobalPose(orginalPosition);
-			((PxRigidDynamic*)capLeft->GetPxActor())->setGlobalPose(orginalPosition);
+			((PxRigidDynamic*)ball->GetPxActor())->setGlobalPose(originalPosition);
+			//((PxRigidDynamic*)capRight->GetPxActor())->setGlobalPose(originalPosition);
+			//((PxRigidDynamic*)capLeft->GetPxActor())->setGlobalPose(originalPosition);
 			ball->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
-			capRight->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
-			capLeft->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
+			//capRight->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
+			//capLeft->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
 		}
 
 		void addForce(PxVec3 _force)
@@ -92,7 +92,6 @@ namespace PhysicsEngine
 		Box* blade2;
 
 		RevoluteJoint* joint;
-		RevoluteJoint* joint2;
 
 		MiniWindmill(Scene* scene, PxVec3* position, bool side, float scale)
 		{
@@ -106,17 +105,18 @@ namespace PhysicsEngine
 
 			blade1 = new Box(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec3(scale / 7, scale / 3, scale * 3));
 			blade1->SetColor(color_palette[10]);
+
+			joint = new RevoluteJoint(base, PxTransform(PxVec3(0.0f, -2.5f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), blade1, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
+			joint->DriveVelocity(3.0f);
+
+			scene->AddActor(blade1);
 			
 			blade2 = new Box(PxTransform(PxVec3(position->x, position->y + 3, position->z + 1)), PxVec3(scale / 7, scale * 3, scale / 3));
 			blade2->SetColor(color_palette[10]);
 
-			joint = new RevoluteJoint(base, PxTransform(PxVec3(0.0f, -2.5f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), blade1, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
-			joint2 = new RevoluteJoint(base, PxTransform(PxVec3(0.0f, -2.5f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), blade2, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
-			
-			joint->DriveVelocity(3.0f);
+			joint = new RevoluteJoint(base, PxTransform(PxVec3(0.0f, -2.5f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), blade2, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
 
 			scene->AddActor(base);
-			scene->AddActor(blade1);
 			scene->AddActor(blade2);
 		}
 
@@ -235,37 +235,64 @@ namespace PhysicsEngine
 	class Catapult
 	{
 	public:
-		Box * base;
-		Box* base2;
+		Box* base;
 		Box* body;
 
+		PxReal force = 5;
 		RevoluteJoint* joint;
+		PxVec3* originalPos;
+		PxQuat originalRot;
 
-		bool shoot = false;
+		bool shoot;
 
-		Catapult(Scene* scene, PxVec3* position, PxVec3* rotation, float scale)
+		Catapult(Scene* scene, PxVec3* position, float scale)
 		{
-			base = new Box(PxTransform(PxVec3(position->x - 1.5f, position->y, position->z)), PxVec3(scale / 2, scale*4, scale / 2));
-			base->SetKinematic(true);
+			originalPos = new PxVec3(position->x - 1.5f, position->y, position->z);
+
+			base = new Box(PxTransform(PxVec3(originalPos->x, originalPos->y, originalPos->z)), PxVec3(scale / 2, scale*4, scale / 2));
+			base->SetKinematic(false);
+			base->GetPxActor()->setActorFlags(PxActorFlag::eDISABLE_GRAVITY);
 			base->SetColor(color_palette[2]);
 
-			body = new Box(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec3(1.0f, scale / 10, scale * 4));
+			body = new Box(PxTransform(PxVec3(originalPos->x, originalPos->y, originalPos->z)), PxVec3(1.0f, scale / 10, scale * 4));
+			body->GetPxActor()->setActorFlags(PxActorFlag::eDISABLE_GRAVITY);
 
-			joint = new RevoluteJoint(base, PxTransform(PxVec3(2.5f, 4.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(1.0f, 0.0f, 0.0f))), body, PxTransform(PxVec3(1.0f, 0.0f, 0.0f)));
+			joint = new RevoluteJoint(base, PxTransform(PxVec3(1.6f, 4.0f, 0.0f)), body, PxTransform(PxVec3(0.0f, 0.0f, 0.0f)));
 
 			scene->AddActor(base);
 			scene->AddActor(body);
+
+			originalRot = base->GetRotation();
 		}
 
 		void Update()
 		{
+
 			if (shoot)
+			{
+				base->SetKinematic(true);
 				joint->DriveVelocity(-10.0f);
+			}
 			else
 			{
-				joint->DriveVelocity(0.0f);
-				body->SetRotation(PxQuat(0.0f, PxVec3(0.0f, 0.0f, 0.0f)));
+				base->SetKinematic(false);
+				Reset();
 			}
+
+		}
+
+		void Reset()
+		{
+			joint->DriveVelocity(0.0f);
+			base->SetRotation(originalRot);
+			body->SetRotation(PxQuat(-PxPi, PxVec3(1.0f, 0.0f, 0.0f)));
+			((PxRigidDynamic*)base->GetPxActor())->setGlobalPose(PxTransform(PxVec3(originalPos->x, originalPos->y, originalPos->z)));
+		}
+
+		void Move(PxVec3 _force)
+		{
+			base->GetRigidBody()->setLinearVelocity(_force * force);
+			originalPos = new PxVec3(base->GetPosition().x, originalPos->y, originalPos->z);
 		}
 	};
 
@@ -274,7 +301,7 @@ namespace PhysicsEngine
 	public:
 		Sphere* Button;
 
-		bool activated = false;
+		bool activated;
 
 		Catapult* catapult;
 
@@ -292,6 +319,8 @@ namespace PhysicsEngine
 
 		void Update()
 		{
+			SetPosition();
+
 			if (activated)
 			{
 				Button->SetColor(color_palette[3]);
@@ -302,6 +331,11 @@ namespace PhysicsEngine
 				Button->SetColor(color_palette[4]);
 				catapult->shoot = false;
 			}
+		}
+
+		void SetPosition()
+		{
+			((PxRigidDynamic*)Button->GetPxActor())->setGlobalPose(PxTransform(PxVec3(catapult->originalPos->x + 1.6f, catapult->originalPos->y + 3.8f, catapult->originalPos->z + 3.0f)));
 		}
 	};
 
