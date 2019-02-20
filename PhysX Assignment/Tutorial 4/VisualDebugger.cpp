@@ -37,7 +37,7 @@ namespace VisualDebugger
 	void ToggleRenderMode();
 	void HUDInit();
 	
-	float camSpeed = 5.0f;
+	float camSpeed = 50.0f;
 	bool enableCameraMotion;
 	int size;
 
@@ -233,22 +233,22 @@ namespace VisualDebugger
 			switch (toupper(key))
 			{
 			case 'W':
-				camera->MoveForward(delta_time * 5);
+				camera->MoveForward(delta_time * camSpeed);
 				break;
 			case 'S':
-				camera->MoveBackward(delta_time * 5);
+				camera->MoveBackward(delta_time * camSpeed);
 				break;
 			case 'A':
-				camera->MoveLeft(delta_time * 5);
+				camera->MoveLeft(delta_time * camSpeed);
 				break;
 			case 'D':
-				camera->MoveRight(delta_time * 5);
+				camera->MoveRight(delta_time * camSpeed);
 				break;
 			case 'E':
-				camera->MoveUp(delta_time * 5);
+				camera->MoveUp(delta_time * camSpeed);
 				break;
 			case 'Q':
-				camera->MoveDown(delta_time * 5);
+				camera->MoveDown(delta_time * camSpeed);
 				break;
 			default:
 				break;

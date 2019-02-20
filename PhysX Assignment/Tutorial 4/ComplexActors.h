@@ -178,6 +178,57 @@ namespace PhysicsEngine
 		}
 	};
 
+	class WreckingBall
+	{
+	public:
+		float speed = 1.0f;
+		PxReal ballMass = 20.0f;
+
+		vector<Box*> boxes;
+		vector<RevoluteJoint*> joints;
+
+		WreckingBall(Scene* scene, PxVec3* position, int links)
+		{
+			for (int i = 0; i < links; i++)
+			{
+				boxes.push_back(new Box(PxTransform(PxVec3(position->x, position->y - i, position->z))));
+
+				if (i != 0)
+				{
+					boxes[i]->SetColor(color_palette[10]);
+
+					if (i == links - 1)
+					{
+						joints.push_back(new RevoluteJoint(boxes[i - 1], PxTransform(PxVec3(0.0f, -2.0f, 0.0f)), boxes[i], PxTransform(PxVec3(0.0f, 0.0f, 0.0f))));
+						boxes[i]->GetShape()->setGeometry(PxBoxGeometry(1.0f, 1.0f, 1.0f));
+						boxes[i]->SetMass(ballMass);
+					}
+					else
+						joints.push_back(new RevoluteJoint(boxes[i - 1], PxTransform(PxVec3(0.0f, -1.5f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), boxes[i], PxTransform(PxVec3(0.0f, 0.0f, 0.0f))));
+				}
+				else
+				{
+					boxes[i]->SetColor(color_palette[9]);
+					boxes[i]->SetKinematic(true);
+				}
+
+				scene->AddActor(boxes[i]);
+			}
+			
+			joints[0]->DriveVelocity(speed);
+		}
+
+		void Update()
+		{
+			cout << boxes[1]->GetRotation().z << endl;
+
+			if(boxes[1]->GetRotation().z > 0.50f)
+				joints[0]->DriveVelocity(speed);
+			else if(boxes[1]->GetRotation().z < -0.50f)
+				joints[0]->DriveVelocity(-speed);
+		}
+	};
+
 	class WobblyPlatform
 	{
 	public:

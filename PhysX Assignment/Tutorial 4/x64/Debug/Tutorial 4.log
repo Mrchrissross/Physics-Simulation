@@ -1,7 +1,1 @@
-﻿  GameScene.cpp
-c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(99): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
-c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(101): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
-c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(63): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(91): warning C4244: '=': conversion from 'physx::PxReal' to 'int', possible loss of data
-c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(95): warning C4244: '=': conversion from 'physx::PxReal' to 'int', possible loss of data
-  Tutorial 4.vcxproj -> C:\Users\Student\Documents\GitHub\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe
+﻿

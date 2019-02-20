@@ -57,6 +57,10 @@ namespace PhysicsEngine
 			else
 				flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.0f, i * -24.0f), 0.0f, 3.0f, false, true, false));
 		}
+
+		flooring[51]->Floor->SetColor(color_palette[1]);
+		flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.5f, flooring[51]->Floor->GetPosition().z), 0.0f, 1.5f, false, true, false));
+		flooring[flooring.size() - 1]->Floor->SetColor(color_palette[9]);
 		
 		miniWindmills.push_back(new MiniWindmill(this, new PxVec3(0.0f, 2.0f, 5.0f), false, 0.97f));
 
@@ -66,7 +70,13 @@ namespace PhysicsEngine
 		AddActor(cloth);
 
 		ramp = new Ramp(this, new PxVec3(1.75f, 0.45f, 43.8f), 1.45f);
-		wobblyPlatform = new WobblyPlatform(this, new PxVec3(0.0f, 1.2f, 39.0f), 0.0f, 1.0f);
+
+		for (int i = 0; i < 6; i++)
+		{
+			wobblyPlatform = new WobblyPlatform(this, new PxVec3(-5.0f + (i * 2), 1.2f, 39.0f), 0.0f, 1.0f);
+		}
+
+		wreckingBall = new WreckingBall(this, new PxVec3(0.0f, 12.0f, 25.0f), 7);
 
 		catapult = new Catapult(this, new PxVec3(0.0f, -1.75f, 33.5f), 1.0f);
 		button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult);
@@ -85,6 +95,7 @@ namespace PhysicsEngine
 
 		button->Update();
 		catapult->Update();
+		wreckingBall->Update();
 
 		if ((-ball->GetPosition().z + 38) >= 0)
 		{
