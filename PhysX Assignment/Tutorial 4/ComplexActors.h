@@ -220,8 +220,6 @@ namespace PhysicsEngine
 
 		void Update()
 		{
-			cout << boxes[1]->GetRotation().z << endl;
-
 			if(boxes[1]->GetRotation().z > 0.50f)
 				joints[0]->DriveVelocity(speed);
 			else if(boxes[1]->GetRotation().z < -0.50f)
