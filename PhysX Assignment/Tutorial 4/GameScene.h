@@ -161,6 +161,6 @@ namespace PhysicsEngine
 		vector <Flooring*> flooring;
 		vector <MiniWindmill*> miniWindmills;
 		WobblyPlatform* wobblyPlatform;
-		WreckingBall* wreckingBall;
+		vector <WreckingBall*> wreckingBalls;
 	};
 }

@@ -40,26 +40,28 @@ namespace PhysicsEngine
 		startingFloor = new Flooring(this, new PxVec3(0.0f, 0.0f, 48.0f), 0.0f, 3.0f, true, false, false);
 
 		int miniwinds = 0;
-		for (int i = 0; i < 100; i++)
+		float spacing = -18.0f;
+
+		for (int i = 0; i < 7; i++)
 		{
 			if ((i % 6) == 0 && i != 0)
 			{
 
 				miniwinds++;
-				flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.0f, i * -24.0f), 0.0f, 3.0f, false, false, true));
+				flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.0f, i * spacing), 0.0f, 3.0f, false, false, true));
 
 				if ((miniwinds % 2) == 0) 
-					miniWindmills.push_back(new MiniWindmill(this, new PxVec3(0.0f, 2.0f, i * -24.0f), false, 0.97f));
+					miniWindmills.push_back(new MiniWindmill(this, new PxVec3(0.0f, 2.0f, i * spacing), false, 0.97f));
 				else
-					miniWindmills.push_back(new MiniWindmill(this, new PxVec3(3.75f, 2.0f, i * -24.0f), true, 0.97f));
+					miniWindmills.push_back(new MiniWindmill(this, new PxVec3(3.75f, 2.0f, i * spacing), true, 0.97f));
 
 			}
 			else
-				flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.0f, i * -24.0f), 0.0f, 3.0f, false, true, false));
+				flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.0f, i * spacing), 0.0f, 3.0f, false, true, false));
 		}
 
-		flooring[51]->Floor->SetColor(color_palette[1]);
-		flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.5f, flooring[51]->Floor->GetPosition().z), 0.0f, 1.5f, false, true, false));
+		flooring[int((flooring.size() - 1) / 2)]->Floor->SetColor(color_palette[1]);
+		flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.5f, flooring[int((flooring.size() - 1) / 2)]->Floor->GetPosition().z), 0.0f, 1.5f, false, false, true));
 		flooring[flooring.size() - 1]->Floor->SetColor(color_palette[9]);
 		
 		miniWindmills.push_back(new MiniWindmill(this, new PxVec3(0.0f, 2.0f, 5.0f), false, 0.97f));
@@ -76,10 +78,11 @@ namespace PhysicsEngine
 			wobblyPlatform = new WobblyPlatform(this, new PxVec3(-5.0f + (i * 2), 1.2f, 39.0f), 0.0f, 1.0f);
 		}
 
-		wreckingBall = new WreckingBall(this, new PxVec3(0.0f, 12.0f, 25.0f), 7);
+		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(2.5f, 17.0f, 25.0f), 7));
+		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-2.5f, 17.0f, 20.0f), 7, true));
 
-		catapult = new Catapult(this, new PxVec3(0.0f, -1.75f, 33.5f), 1.0f);
-		button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult);
+		catapult = new Catapult(this, new PxVec3(0.0f, -1.77f, 33.9f), 1.0f);
+		button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult, 2.2f);
 
 		my_callback = new MySimulationEventCallback(ball, button);
 		px_scene->setSimulationEventCallback(my_callback);
@@ -93,9 +96,14 @@ namespace PhysicsEngine
 			miniWindmills[i]->Update();
 		}
 
+		for (int i = 0; i < wreckingBalls.size(); i++)
+		{
+			wreckingBalls[i]->Update();
+		}
+
 		button->Update();
 		catapult->Update();
-		wreckingBall->Update();
+
 
 		if ((-ball->GetPosition().z + 38) >= 0)
 		{

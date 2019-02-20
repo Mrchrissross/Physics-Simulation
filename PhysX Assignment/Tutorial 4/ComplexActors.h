@@ -43,6 +43,7 @@ namespace PhysicsEngine
 			ball = new Sphere(PxTransform(PxVec3(position->x, position->y, position->z)), 0.3f, 15.0f);
 			material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, 0.8f);
 			ball->SetMaterial(material);
+			ball->SetMass(0.94798750009838f); // Rugby Ball Weight = 0.94798750009838 pounds
 			ball->SetName("Ball");
 			scene->AddActor(ball);
 
@@ -143,7 +144,7 @@ namespace PhysicsEngine
 			
 			if (slow)
 			{
-				material = scene->GetScene()->getPhysics().createMaterial(0.0f, 20.0f, 0.0f);
+				material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, 0.0f);
 				Floor->SetColor(color_palette[10]);
 			}
 
@@ -181,17 +182,20 @@ namespace PhysicsEngine
 	class WreckingBall
 	{
 	public:
-		float speed = 1.0f;
-		PxReal ballMass = 20.0f;
+		float speed = 0.975f;
+		PxReal ballMass = 15.0f;
+		float linkDistance = 1.5f;
 
 		vector<Box*> boxes;
 		vector<RevoluteJoint*> joints;
 
-		WreckingBall(Scene* scene, PxVec3* position, int links)
+		WreckingBall(Scene* scene, PxVec3* position, int links, bool reverse = false, float _speed = 0.975f)
 		{
+			speed = _speed;
+
 			for (int i = 0; i < links; i++)
 			{
-				boxes.push_back(new Box(PxTransform(PxVec3(position->x, position->y - i, position->z))));
+				boxes.push_back(new Box(PxTransform(PxVec3(position->x, position->y - (1.5f * i), position->z))));
 
 				if (i != 0)
 				{
@@ -199,12 +203,17 @@ namespace PhysicsEngine
 
 					if (i == links - 1)
 					{
-						joints.push_back(new RevoluteJoint(boxes[i - 1], PxTransform(PxVec3(0.0f, -2.0f, 0.0f)), boxes[i], PxTransform(PxVec3(0.0f, 0.0f, 0.0f))));
+						joints.push_back(new RevoluteJoint(boxes[i - 1], PxTransform(PxVec3(0.0f, -linkDistance - 0.5f, 0.0f)), boxes[i], PxTransform(PxVec3(0.0f, 0.0f, 0.0f))));
 						boxes[i]->GetShape()->setGeometry(PxBoxGeometry(1.0f, 1.0f, 1.0f));
 						boxes[i]->SetMass(ballMass);
 					}
 					else
-						joints.push_back(new RevoluteJoint(boxes[i - 1], PxTransform(PxVec3(0.0f, -1.5f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), boxes[i], PxTransform(PxVec3(0.0f, 0.0f, 0.0f))));
+					{
+						if((i % 2) == 0 && i != 2)
+							joints.push_back(new RevoluteJoint(boxes[i - 1], PxTransform(PxVec3(0.0f, -linkDistance, 0.0f)), boxes[i], PxTransform(PxVec3(0.0f, 0.0f, 0.0f))));
+						else
+							joints.push_back(new RevoluteJoint(boxes[i - 1], PxTransform(PxVec3(0.0f, -linkDistance, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f,  1.0f, 0.0f))), boxes[i], PxTransform(PxVec3(0.0f, 0.0f, 0.0f))));
+					}
 				}
 				else
 				{
@@ -214,15 +223,19 @@ namespace PhysicsEngine
 
 				scene->AddActor(boxes[i]);
 			}
-			
-			joints[0]->DriveVelocity(speed);
+
+			if(reverse)
+				joints[0]->DriveVelocity(-speed);
+			else
+				joints[0]->DriveVelocity(speed);
+
 		}
 
 		void Update()
 		{
-			if(boxes[1]->GetRotation().z > 0.50f)
+			if (boxes[1]->GetRotation().z > 0.50f)
 				joints[0]->DriveVelocity(speed);
-			else if(boxes[1]->GetRotation().z < -0.50f)
+			else if (boxes[1]->GetRotation().z < -0.50f)
 				joints[0]->DriveVelocity(-speed);
 		}
 	};
@@ -324,10 +337,9 @@ namespace PhysicsEngine
 			}
 			else
 			{
-				base->SetKinematic(false);
 				Reset();
+				base->SetKinematic(false);
 			}
-
 		}
 
 		void Reset()
@@ -335,6 +347,7 @@ namespace PhysicsEngine
 			joint->DriveVelocity(0.0f);
 			base->SetRotation(originalRot);
 			body->SetRotation(PxQuat(-PxPi, PxVec3(1.0f, 0.0f, 0.0f)));
+			body->GetRigidBody()->setLinearVelocity(PxVec3(0.0f, 0.0f, 0.0f));
 			((PxRigidDynamic*)base->GetPxActor())->setGlobalPose(PxTransform(PxVec3(originalPos->x, originalPos->y, originalPos->z)));
 		}
 
@@ -349,14 +362,16 @@ namespace PhysicsEngine
 	{
 	public:
 		Sphere* Button;
-
+		float buttonPosition = 2.7f;
 		bool activated;
 
 		Catapult* catapult;
 
-		CatapultButton(Scene* scene, PxVec3* position, Catapult* lift)
+		CatapultButton(Scene* scene, PxVec3* position, Catapult* _catapult, float _buttonPosition = 2.7f)
 		{
-			catapult = lift;
+			buttonPosition = _buttonPosition;
+
+			catapult = _catapult;
 
 			Button = new Sphere(PxTransform(PxVec3(position->x, position->y, position->z)), 0.4f, 1.0f);
 			Button->SetKinematic(true);
@@ -384,7 +399,7 @@ namespace PhysicsEngine
 
 		void SetPosition()
 		{
-			((PxRigidDynamic*)Button->GetPxActor())->setGlobalPose(PxTransform(PxVec3(catapult->originalPos->x + 1.6f, catapult->originalPos->y + 3.8f, catapult->originalPos->z + 3.0f)));
+			((PxRigidDynamic*)Button->GetPxActor())->setGlobalPose(PxTransform(PxVec3(catapult->originalPos->x + 1.6f, catapult->originalPos->y + 3.8f, catapult->originalPos->z + buttonPosition)));
 		}
 	};
 

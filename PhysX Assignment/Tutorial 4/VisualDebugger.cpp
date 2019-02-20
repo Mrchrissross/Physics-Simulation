@@ -40,6 +40,7 @@ namespace VisualDebugger
 	float camSpeed = 50.0f;
 	bool enableCameraMotion;
 	int size;
+	int score;
 
 	///simulation objects
 	Camera* camera;
@@ -154,7 +155,7 @@ namespace VisualDebugger
 				Renderer::Render(&actors[0], (PxU32)actors.size());
 		}
 
-		int score = scene->GetScore();
+		score = scene->GetScore();
 		int height = scene->GetHeight();
 		int velocity = scene->GetVelocity();
 
@@ -259,8 +260,11 @@ namespace VisualDebugger
 			switch (toupper(key))
 			{
 				case 'W':
-					scene->ball->addForce(PxVec3(0, 0, -1));
+				{
+					if(score < 1)
+						scene->ball->addForce(PxVec3(0, 0, -1));
 					break;
+				}
 				case 'S':
 					scene->ball->addForce(PxVec3(0, 0, 1));
 					break;
