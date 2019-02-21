@@ -47,7 +47,7 @@ namespace PhysicsEngine
 			ball->SetName("Ball");
 			scene->AddActor(ball);
 
-			/*float capSize = 0.15f;
+			float capSize = 0.15f;
 			
 			capRight = new Capsule(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec2(capSize, capSize), 15.0f);
 			RevoluteJoint* joint = new RevoluteJoint(ball, PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), capRight, PxTransform(PxVec3(0.25f, 0.0f, 0.0f)));
@@ -55,7 +55,7 @@ namespace PhysicsEngine
 			
 			capLeft = new Capsule(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec2(capSize, capSize), 15.0f);
 			joint = new RevoluteJoint(ball, PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), capLeft, PxTransform(PxVec3(-0.25f, 0.0f, 0.0f)));
-			scene->AddActor(capLeft);*/
+			scene->AddActor(capLeft);
 		}
 
 		Sphere* GetBall()
@@ -71,11 +71,11 @@ namespace PhysicsEngine
 		void Reset() 
 		{
 			((PxRigidDynamic*)ball->GetPxActor())->setGlobalPose(originalPosition);
-			//((PxRigidDynamic*)capRight->GetPxActor())->setGlobalPose(originalPosition);
-			//((PxRigidDynamic*)capLeft->GetPxActor())->setGlobalPose(originalPosition);
+			((PxRigidDynamic*)capRight->GetPxActor())->setGlobalPose(originalPosition);
+			((PxRigidDynamic*)capLeft->GetPxActor())->setGlobalPose(originalPosition);
 			ball->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
-			//capRight->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
-			//capLeft->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
+			capRight->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
+			capLeft->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
 		}
 
 		void addForce(PxVec3 _force)
@@ -240,6 +240,92 @@ namespace PhysicsEngine
 		}
 	};
 
+	class GoalPost
+	{
+	public:
+		Box * barBox;
+		vector<Box*> boxes;
+		PxMaterial* material;
+
+		PxVec3 barPos;
+		PxQuat barRot;
+		vector<PxVec3> positions;
+		vector<PxQuat> rotations;
+
+		GoalPost(Scene* scene, PxVec3* position, int boxNumber = 18)
+		{
+			int bar = (boxNumber / 6) * 5;
+			material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, 0.0f);
+			int y = 0;
+
+			for (int i = 0; i < boxNumber; i++)
+			{
+				y++;
+
+				if ((i % 2) == 0)
+					continue;
+
+				if (bar == (i + 1))
+					bar = i;
+
+				if (i == bar)
+				{
+					barBox = new Box(PxTransform(PxVec3(position->x, position->y + (y * 0.52f), position->z)), PxVec3(3.0f, 0.5f, 0.5f));
+					barBox->SetColor(color_palette[10]);
+					scene->AddActor(barBox);
+					bar = 100000000;
+					i--;
+					continue;
+				}
+
+				boxes.push_back(new Box(PxTransform(PxVec3(position->x - 2.5f, position->y + (y * 0.55f), position->z))));
+				boxes.push_back(new Box(PxTransform(PxVec3(position->x + 2.5f, position->y + (y * 0.55f), position->z))));
+				
+				if ((i % 3) == 0)
+				{
+					boxes[i - 1]->SetColor(color_palette[10]);
+					boxes[i]->SetColor(color_palette[10]);
+				}
+				else
+				{
+					boxes[i - 1]->SetColor(color_palette[9]);
+					boxes[i]->SetColor(color_palette[9]);
+				}
+
+				boxes[i - 1]->SetMaterial(material);
+				boxes[i]->SetMaterial(material);
+
+				scene->AddActor(boxes[i - 1]);
+				scene->AddActor(boxes[i]);
+			}
+				
+			for (int i = 0; i < boxes.size(); i++)
+			{
+				positions.push_back(boxes[i]->GetPosition());
+				rotations.push_back(boxes[i]->GetRotation());
+			}
+
+			barPos = barBox->GetPosition();
+			barRot = barBox->GetRotation();
+		}
+
+		void Reset()
+		{
+			for (int i = 0; i < boxes.size(); i++)
+			{
+				boxes[i]->GetRigidBody()->setLinearVelocity(PxVec3(0.0f, 0.0f, 0.0f));
+				boxes[i]->GetRigidBody()->setAngularVelocity(PxVec3(0.0f, 0.0f, 0.0f));
+				boxes[i]->SetPosition(PxVec3(positions[i].x, positions[i].y, positions[i].z));
+				boxes[i]->SetRotation(rotations[i]);
+			}
+
+			barBox->GetRigidBody()->setLinearVelocity(PxVec3(0.0f, 0.0f, 0.0f));
+			barBox->GetRigidBody()->setAngularVelocity(PxVec3(0.0f, 0.0f, 0.0f));
+			barBox->SetPosition(PxVec3(barPos.x, barPos.y, barPos.z));
+			barBox->SetRotation(barRot);
+		}
+	};
+
 	class WobblyPlatform
 	{
 	public:
@@ -304,6 +390,8 @@ namespace PhysicsEngine
 		RevoluteJoint* joint;
 		PxVec3* originalPos;
 		PxQuat originalRot;
+		PxQuat originalRot2;
+		bool reset;
 
 		bool shoot;
 
@@ -325,6 +413,7 @@ namespace PhysicsEngine
 			scene->AddActor(body);
 
 			originalRot = base->GetRotation();
+			originalRot2 = body->GetRotation();
 		}
 
 		void Update()
@@ -334,6 +423,7 @@ namespace PhysicsEngine
 			{
 				base->SetKinematic(true);
 				joint->DriveVelocity(-10.0f);
+				reset = false;
 			}
 			else
 			{
@@ -345,10 +435,12 @@ namespace PhysicsEngine
 		void Reset()
 		{
 			joint->DriveVelocity(0.0f);
+			base->SetPosition(PxVec3(originalPos->x, originalPos->y, originalPos->z));
 			base->SetRotation(originalRot);
-			body->SetRotation(PxQuat(-PxPi, PxVec3(1.0f, 0.0f, 0.0f)));
+			body->SetRotation(originalRot2);
 			body->GetRigidBody()->setLinearVelocity(PxVec3(0.0f, 0.0f, 0.0f));
-			((PxRigidDynamic*)base->GetPxActor())->setGlobalPose(PxTransform(PxVec3(originalPos->x, originalPos->y, originalPos->z)));
+			body->GetRigidBody()->setAngularVelocity(PxVec3(0.0f, 0.0f, 0.0f));
+			reset = true;
 		}
 
 		void Move(PxVec3 _force)

@@ -44,7 +44,7 @@ namespace PhysicsEngine
 
 		for (int i = 0; i < 7; i++)
 		{
-			if ((i % 6) == 0 && i != 0)
+			/*if ((i % 6) == 0 && i != 0)
 			{
 
 				miniwinds++;
@@ -55,8 +55,8 @@ namespace PhysicsEngine
 				else
 					miniWindmills.push_back(new MiniWindmill(this, new PxVec3(3.75f, 2.0f, i * spacing), true, 0.97f));
 
-			}
-			else
+			}*/
+			//else
 				flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.0f, i * spacing), 0.0f, 3.0f, false, true, false));
 		}
 
@@ -82,7 +82,9 @@ namespace PhysicsEngine
 		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-2.5f, 17.0f, 20.0f), 7, true));
 
 		catapult = new Catapult(this, new PxVec3(0.0f, -1.77f, 33.9f), 1.0f);
-		button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult, 2.2f);
+		button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult, 2.3f);
+
+		goalPost = new GoalPost(this, new PxVec3(0.0f, 0.0f, -90.0f));
 
 		my_callback = new MySimulationEventCallback(ball, button);
 		px_scene->setSimulationEventCallback(my_callback);
@@ -132,6 +134,7 @@ namespace PhysicsEngine
 			velocity = 0;
 
 			ball->Reset();
+			goalPost->Reset();
 			ball->addScore = false;
 		}
 	}
