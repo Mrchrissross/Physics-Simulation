@@ -37,10 +37,9 @@ namespace VisualDebugger
 	void ToggleRenderMode();
 	void HUDInit();
 	
-	float camSpeed = 50.0f;
+	float camSpeed = 50.0f, fps = 0;
 	bool enableCameraMotion;
-	int size;
-	int score;
+	int size, score, time, timebase = 0, frame = 0;
 
 	///simulation objects
 	Camera* camera;
@@ -99,6 +98,7 @@ namespace VisualDebugger
 		//add a help screen
 		hud.AddLine(HELP, "");
 		hud.AddLine(HELP, "   Press F1 to pause simulation.");
+		hud.AddLine(HELP, "   Press R to Reset simulation.");
 		hud.AddLine(HELP, "");
 		hud.AddLine(HELP, "");
 		//add a pause screen
@@ -159,7 +159,7 @@ namespace VisualDebugger
 		int height = scene->GetHeight();
 		int velocity = scene->GetVelocity();
 
-		hud.AmendLine(HELP, "   Distance: " + to_string(score) + " -  Height: " + to_string(height) + " -  Speed: " + to_string(velocity));
+		hud.AmendLine(HELP, "   Distance: " + to_string(score) + " -  Height: " + to_string(height) + " -  Speed: " + to_string(velocity) + " -  FPS: " + to_string(int(fps)));
 
 		vector <int> scores = scene->GetScoreBoard();
 		vector <int> heights = scene->GetHeightBoard();
@@ -188,6 +188,17 @@ namespace VisualDebugger
 
 		//finish rendering
 		Renderer::Finish();
+
+		frame++;
+
+		time = glutGet(GLUT_ELAPSED_TIME);
+
+		if (time - timebase > 1000)
+		{
+			fps = frame * 1000.0 / (time - timebase);
+			timebase = time;
+			frame = 0;
+		}
 
 		//perform a single simulation step
 		scene->SceneUpdate(delta_time);

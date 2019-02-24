@@ -136,16 +136,16 @@ namespace PhysicsEngine
 		Box* End;
 		PxMaterial* material;
 
-		Flooring(Scene* scene, PxVec3* position, float rotation, float scale, bool startingFloor, bool slow, bool bouncy)
+		Flooring(Scene* scene, PxVec3* position, PxVec3* scale, PxVec3 color, bool startingFloor, bool slow, bool bouncy)
 		{
-			Floor = new Box(PxTransform(PxVec3(position->x, position->y + 0.3f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 7, scale * 3));
+			Floor = new Box(PxTransform(PxVec3(position->x, position->y + 0.3f, position->z), PxQuat(0.0f, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale->x, scale->y, scale->z));
 			Floor->SetKinematic(true);
-			Floor->SetColor(color_palette[6]);
+			Floor->SetColor(color);
 			
 			if (slow)
 			{
-				material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, 0.0f);
-				Floor->SetColor(color_palette[10]);
+				material = scene->GetScene()->getPhysics().createMaterial(0.0f, 100.0f, 0.0f);
+				Floor->SetColor(color);
 			}
 
 			if (bouncy)
@@ -160,15 +160,15 @@ namespace PhysicsEngine
 
 			if (startingFloor)
 			{
-				Left = new Box(PxTransform(PxVec3(position->x - (scale * 2) - 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
+				Left = new Box(PxTransform(PxVec3(position->x - (scale->x) - 0.2f, position->y + 0.8f, position->z), PxQuat(0.0f, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(0.3f, 1.0f, 9.0f));
 				Left->SetColor(color_palette[0]);
 				Left->SetKinematic(true);
 
-				Right = new Box(PxTransform(PxVec3(position->x + (scale * 2) + 0.2f, position->y + 0.8f, position->z), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale / 10, scale / 3, scale * 3));
+				Right = new Box(PxTransform(PxVec3(position->x + (scale->x) + 0.2f, position->y + 0.8f, position->z), PxQuat(0.0f, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(0.3f, 1.0f, 9.0f));
 				Right->SetColor(color_palette[0]);
 				Right->SetKinematic(true);
 
-				End = new Box(PxTransform(PxVec3(position->x, position->y + 0.8f, position->z + (scale * 3) + 0.2f), PxQuat(rotation, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(scale * 2, scale / 3, scale / 10));
+				End = new Box(PxTransform(PxVec3(position->x, position->y + 0.8f, position->z + (scale->z) + 0.2f), PxQuat(0.0f, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(6.0f, 1.0f, 0.3f));
 				End->SetColor(color_palette[0]);
 				End->SetKinematic(true);
 

@@ -41,8 +41,8 @@ namespace PhysicsEngine
 
 		//visual debugger
 		if (!vd_connection)
-			vd_connection = PxVisualDebuggerExt::createConnection(physics->getPvdConnectionManager(), 
-			"localhost", 5425, 100, PxVisualDebuggerExt::getAllConnectionFlags());
+			vd_connection = PxVisualDebuggerExt::createConnection(physics->getPvdConnectionManager(),
+				"localhost", 5425, 100, PxVisualDebuggerExt::getAllConnectionFlags());
 
 		//create a deafult material
 		CreateMaterial();
@@ -63,9 +63,9 @@ namespace PhysicsEngine
 			foundation->release();
 	}
 
-	PxPhysics* GetPhysics() 
-	{ 
-		return physics; 
+	PxPhysics* GetPhysics()
+	{
+		return physics;
 	}
 
 	PxCooking* GetCooking()
@@ -83,7 +83,7 @@ namespace PhysicsEngine
 			return 0;
 	}
 
-	PxMaterial* CreateMaterial(PxReal sf, PxReal df, PxReal cr) 
+	PxMaterial* CreateMaterial(PxReal sf, PxReal df, PxReal cr)
 	{
 		return physics->createMaterial(sf, df, cr);
 	}
@@ -113,8 +113,8 @@ namespace PhysicsEngine
 	{
 		if (shape_indx < colors.size())
 			return &colors[shape_indx];
-		else 
-			return 0;			
+		else
+			return 0;
 	}
 
 	void Actor::SetMaterial(PxMaterial* new_material, PxU32 shape_index)
@@ -166,9 +166,9 @@ namespace PhysicsEngine
 	{
 		std::vector<PxShape*> shape_list = GetShapes(shape_index);
 		for (PxU32 i = 0; i < shape_list.size(); i++)
-			shape_list[i]->setSimulationFilterData(PxFilterData(filterGroup, filterMask,0,0));
+			shape_list[i]->setSimulationFilterData(PxFilterData(filterGroup, filterMask, 0, 0));
 	}
-	
+
 	void Actor::SetName(const string& new_name)
 	{
 		name = new_name;
@@ -241,7 +241,7 @@ namespace PhysicsEngine
 
 	void DynamicActor::CreateShape(const PxGeometry& geometry, PxReal density)
 	{
-		PxShape* shape = ((PxRigidDynamic*)actor)->createShape(geometry,*GetMaterial());
+		PxShape* shape = ((PxRigidDynamic*)actor)->createShape(geometry, *GetMaterial());
 		PxRigidBodyExt::updateMassAndInertia(*(PxRigidDynamic*)actor, density);
 		colors.push_back(default_color);
 		//pass the color pointers to the renderer
@@ -269,7 +269,7 @@ namespace PhysicsEngine
 
 	void StaticActor::CreateShape(const PxGeometry& geometry, PxReal density)
 	{
-		PxShape* shape = ((PxRigidStatic*)actor)->createShape(geometry,*GetMaterial());
+		PxShape* shape = ((PxRigidStatic*)actor)->createShape(geometry, *GetMaterial());
 		colors.push_back(default_color);
 		//pass the color pointers to the renderer
 		shape->userData = new UserData();
@@ -283,14 +283,14 @@ namespace PhysicsEngine
 		//scene
 		PxSceneDesc sceneDesc(GetPhysics()->getTolerancesScale());
 
-		if(!sceneDesc.cpuDispatcher)
+		if (!sceneDesc.cpuDispatcher)
 		{
 			PxDefaultCpuDispatcher* mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
 			sceneDesc.cpuDispatcher = mCpuDispatcher;
 		}
 
 		sceneDesc.filterShader = filter_shader;
-		
+
 		px_scene = GetPhysics()->createScene(sceneDesc);
 
 		if (!px_scene)
@@ -315,7 +315,6 @@ namespace PhysicsEngine
 
 		Update();
 
-
 		px_scene->simulate(dt);
 		px_scene->fetchResults(true);
 	}
@@ -325,9 +324,9 @@ namespace PhysicsEngine
 		px_scene->addActor(*actor->GetPxActor());
 	}
 
-	PxScene* Scene::GetScene() 
-	{ 
-		return px_scene; 
+	PxScene* Scene::GetScene()
+	{
+		return px_scene;
 	}
 
 	void Scene::Reset()
@@ -341,8 +340,8 @@ namespace PhysicsEngine
 		pause = value;
 	}
 
-	bool Scene::isPaused() 
-	{ 
+	bool Scene::isPaused()
+	{
 		return pause;
 	}
 
@@ -363,7 +362,7 @@ namespace PhysicsEngine
 					{
 						HighlightOff(selected_actor);
 						//select the next actor
-						selected_actor = actors[(i+1)%actors.size()];
+						selected_actor = actors[(i + 1) % actors.size()];
 						break;
 					}
 			}
@@ -379,7 +378,7 @@ namespace PhysicsEngine
 
 	std::vector<PxActor*> Scene::GetAllActors()
 	{
-		physx::PxActorTypeSelectionFlags selection_flag = PxActorTypeSelectionFlag::eRIGID_DYNAMIC | PxActorTypeSelectionFlag::eRIGID_STATIC | 
+		physx::PxActorTypeSelectionFlags selection_flag = PxActorTypeSelectionFlag::eRIGID_DYNAMIC | PxActorTypeSelectionFlag::eRIGID_STATIC |
 			PxActorTypeSelectionFlag::eCLOTH;
 		std::vector<PxActor*> actors(px_scene->getNbActors(selection_flag));
 		px_scene->getActors(selection_flag, (PxActor**)&actors.front(), (PxU32)actors.size());
@@ -398,7 +397,7 @@ namespace PhysicsEngine
 		{
 			PxVec3* color = ((UserData*)shapes[i]->userData)->color;
 			sactor_color_orig.push_back(*color);
-			*color += PxVec3(.2f,.2f,.2f);
+			*color += PxVec3(.2f, .2f, .2f);
 		}
 	}
 
