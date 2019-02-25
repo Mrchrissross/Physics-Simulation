@@ -1,12 +1,20 @@
 ﻿  GameScene.cpp
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(100): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(102): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(54): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(54): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(55): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(56): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(57): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(80): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(114): warning C4244: '=': conversion from 'physx::PxReal' to 'int', possible loss of data
-c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(118): warning C4244: '=': conversion from 'physx::PxReal' to 'int', possible loss of data
-  Tutorial 4.vcxproj -> C:\Users\mrchr\Documents\Github\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(126): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(128): warning C4244: 'argument': conversion from 'double' to 'physx::PxReal', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(54): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(54): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(55): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(56): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(57): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(71): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(73): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(74): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(75): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(76): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(80): warning C4305: 'argument': truncation from 'double' to 'physx::PxReal'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(118): warning C4244: '=': conversion from 'physx::PxReal' to 'int', possible loss of data
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\gamescene.cpp(122): warning C4244: '=': conversion from 'physx::PxReal' to 'int', possible loss of data
+  VisualDebugger.cpp
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\visualdebugger.cpp(172): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  Tutorial 4.vcxproj -> C:\Users\Student\Documents\GitHub\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe

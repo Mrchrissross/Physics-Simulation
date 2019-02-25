@@ -42,9 +42,9 @@ namespace PhysicsEngine
 		float spacing = -18.0f;
 		for (int i = 0; i < 14; i++)
 		{
-			flooring.push_back(new Flooring(this, new PxVec3(-12.0f, 0.0f, i * spacing), new PxVec3(6.0f, 0.5, 9.0f), color_palette[7], false, true, false));
-			flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.0f, i * spacing), new PxVec3(6.0f, 0.5, 9.0f), color_palette[7], false, true, false));
-			flooring.push_back(new Flooring(this, new PxVec3(12.0f, 0.0f, i * spacing), new PxVec3(6.0f, 0.5, 9.0f), color_palette[7], false, true, false));
+			flooring.push_back(new Flooring(this, new PxVec3(-12.0f, 0.0f, i * spacing), new PxVec3(6.0f, 0.5, 9.0f), color_palette[5], false, true, false));
+			flooring.push_back(new Flooring(this, new PxVec3(0.0f, 0.0f, i * spacing), new PxVec3(6.0f, 0.5, 9.0f), color_palette[5], false, true, false));
+			flooring.push_back(new Flooring(this, new PxVec3(12.0f, 0.0f, i * spacing), new PxVec3(6.0f, 0.5, 9.0f), color_palette[5], false, true, false));
 		}
 
 		spacing = 10.0;
@@ -68,12 +68,12 @@ namespace PhysicsEngine
 			wobblyPlatform = new WobblyPlatform(this, new PxVec3(-5.0f + (i * 2), 1.2f, 39.0f), 0.0f, 1.0f);
 		}
 
-		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(2.5f, 17.0f, 25.0f), 7));
+		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(2.5f, 17.0f, 25.0f), 7.25));
 		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-2.5f, 17.0f, 20.0f), 7, true));
-		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(0.0f, 25.0f, -55.0f), 7));
-		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(0.0f, 40.0f, -55.0f), 7));
-		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(0.0f, 25.0f, -135.0f), 7, true));
-		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(0.0f, 40.0f, -135.0f), 7, true));
+		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(0.0f, 25.0f, -55.0f), 7.05));
+		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(0.0f, 40.0f, -55.0f), 7.5));
+		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(0.0f, 25.0f, -135.0f), 7.15, true));
+		wreckingBalls.push_back(new WreckingBall(this, new PxVec3(0.0f, 40.0f, -135.0f), 7.5, true));
 
 		ramp = new Ramp(this, new PxVec3(1.75f, 0.45f, 43.8f), 1.45f);
 		
@@ -88,7 +88,9 @@ namespace PhysicsEngine
 		goalPosts.push_back(new GoalPost(this, new PxVec3(0.0f, 0.0f, -90.0f)));
 		goalPosts.push_back(new GoalPost(this, new PxVec3(0.0f, 0.0f, -160.0f)));
 
-		// Add bouncing spheres?
+		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(-10.0f, 10.0f, -20.0f), 2.0f, 1.975f));
+		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(10.0f, 20.0f, -70.0f), 2.0f, 1.975f));
+		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(-15.0f, 15.0f, -130.0f), 2.0f, 1.975f));
 
 		my_callback = new MySimulationEventCallback(ball, button);
 		px_scene->setSimulationEventCallback(my_callback);
@@ -142,6 +144,10 @@ namespace PhysicsEngine
 			for (int i = 0; i < goalPosts.size(); i++)
 			{
 				goalPosts[i]->Reset();
+			}
+			for (int i = 0; i < bouncyBalls.size(); i++)
+			{
+				bouncyBalls[i]->Reset();
 			}
 
 			ball->addScore = false;

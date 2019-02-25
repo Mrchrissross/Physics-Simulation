@@ -163,5 +163,6 @@ namespace PhysicsEngine
 		WobblyPlatform* wobblyPlatform;
 		vector <WreckingBall*> wreckingBalls;
 		vector <GoalPost*> goalPosts;
+		vector<BouncyBall*> bouncyBalls;
 	};
 }

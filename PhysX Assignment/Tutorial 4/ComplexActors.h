@@ -85,6 +85,32 @@ namespace PhysicsEngine
 	
 	};
 
+	class BouncyBall
+	{
+
+	public:
+		Sphere* ball;
+		PxMaterial* material;
+		PxVec3* originalPosition;
+
+		BouncyBall(Scene* scene, PxVec3* position, float size, float bounciness)
+		{
+			originalPosition = position;
+
+			ball = new Sphere(PxTransform(PxVec3(position->x, position->y, position->z)), size, 15.0f);
+			material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, bounciness);
+			ball->SetMaterial(material);
+			ball->SetColor(color_palette[7]);
+			ball->SetMass(1.0f); // Rugby Ball Weight = 0.94798750009838 pounds
+			scene->AddActor(ball);
+		}
+
+		void Reset()
+		{
+			ball->SetPosition(PxVec3(originalPosition->x, originalPosition->y, originalPosition->z));
+		}
+	};
+
 	class MiniWindmill
 	{
 	public:
