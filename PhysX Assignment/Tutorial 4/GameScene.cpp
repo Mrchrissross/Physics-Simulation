@@ -92,6 +92,9 @@ namespace PhysicsEngine
 		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(10.0f, 20.0f, -70.0f), 2.0f, 1.975f));
 		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(-15.0f, 15.0f, -130.0f), 2.0f, 1.975f));
 
+		myBox = new CustomSphere(PxTransform(PxVec3(.0f, 10.f, 48.0f)), PxVec3(0.75f, 0.75f, 0.75f), 1.0f);
+		AddActor(myBox);
+
 		my_callback = new MySimulationEventCallback(ball, button);
 		px_scene->setSimulationEventCallback(my_callback);
 		
@@ -151,6 +154,57 @@ namespace PhysicsEngine
 			}
 
 			ball->addScore = false;
+		}
+
+		if (ball->invalidScenario1)
+		{
+			int numberOfWB = 5;
+
+			for (int i = 0; i < numberOfWB; i++)
+			{
+				wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-15.0f, 17.0f, -155.0f + (15.0 * i)), 7.25));
+			
+				for (int y = 0; y < numberOfWB; y++)
+				{
+					wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-25.0f + (15.0 * y), 17.0f, -155.0f + (15.0 * i)), 7.25));
+				}
+			}
+
+			ball->invalidScenario1 = false;
+		}
+
+		if (ball->invalidScenario2)
+		{
+			int numberOfWB = 7;
+
+			for (int i = 0; i < numberOfWB; i++)
+			{
+				wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-15.0f, 17.0f, -155.0f + (15.0 * i)), 7.25));
+
+				for (int y = 0; y < numberOfWB; y++)
+				{
+					wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-35.0f + (15.0 * y), 17.0f, -155.0f + (15.0 * i)), 7.25));
+				}
+			}
+
+			ball->invalidScenario2 = false;
+		}
+
+		if (ball->invalidScenario3)
+		{
+			int numberOfWB = 10;
+
+			for (int i = 0; i < numberOfWB; i++)
+			{
+				wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-15.0f, 17.0f, -155.0f + (15.0 * i)), 7.25));
+
+				for (int y = 0; y < numberOfWB; y++)
+				{
+					wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-75.0f + (15.0 * y), 17.0f, -155.0f + (15.0 * i)), 7.25));
+				}
+			}
+
+			ball->invalidScenario3 = false;
 		}
 	}
 

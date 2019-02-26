@@ -53,7 +53,6 @@ namespace PhysicsEngine
 		void Actor::SetName(const string& name);
 		string Actor::GetName();
 
-		
 		/// Get & Set Mass
 		void SetMass(PxReal mass);
 		PxReal GetMass();
@@ -123,6 +122,7 @@ namespace PhysicsEngine
 		void HighlightOff(PxRigidDynamic* actor);
 
 	public:
+		int objCounter = 0;
 		Scene(PxSimulationFilterShader custom_filter_shader=PxDefaultSimulationFilterShader) : filter_shader(custom_filter_shader) {}
 
 		///Init the scene

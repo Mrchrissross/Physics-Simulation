@@ -98,6 +98,7 @@ namespace VisualDebugger
 		//add a help screen
 		hud.AddLine(HELP, "");
 		hud.AddLine(HELP, "   Press F1 to pause simulation.");
+		hud.AddLine(HELP, "   Press F2-4 to enable invalid Scenarios (No Return).");
 		hud.AddLine(HELP, "   Press R to Reset simulation.");
 		hud.AddLine(HELP, "");
 		hud.AddLine(HELP, "");
@@ -159,7 +160,7 @@ namespace VisualDebugger
 		int height = scene->GetHeight();
 		int velocity = scene->GetVelocity();
 
-		hud.AmendLine(HELP, "   Distance: " + to_string(score) + " -  Height: " + to_string(height) + " -  Speed: " + to_string(velocity) + " -  FPS: " + to_string(int(fps)));
+		hud.AmendLine(HELP, "   Distance: " + to_string(score) + " -  Height: " + to_string(height) + " -  Speed: " + to_string(velocity) + " -  FPS: " + to_string(int(fps)) + " -  Object Count: " + to_string(scene->objCounter));
 
 		vector <int> scores = scene->GetScoreBoard();
 		vector <int> heights = scene->GetHeightBoard();
@@ -185,6 +186,9 @@ namespace VisualDebugger
 
 		//render HUD
 		hud.Render();
+
+		//render custom objects
+		scene->myBox->Render();
 
 		//finish rendering
 		Renderer::Finish();
@@ -309,6 +313,20 @@ namespace VisualDebugger
 		case GLUT_KEY_F1:
 			//toggle scene pause
 			scene->Pause(!scene->isPaused());
+			break;
+		case GLUT_KEY_F2:
+			//Create invalid Scenario 1
+			scene->ball->invalidScenario1 = true;
+			break;
+			//display control
+		case GLUT_KEY_F3:
+			//Create invalid Scenario 2
+			scene->ball->invalidScenario2 = true;
+			break;
+			//display control
+		case GLUT_KEY_F4:
+			//Create invalid Scenario 3
+			scene->ball->invalidScenario3 = true;			
 			break;
 			//display control
 		case GLUT_KEY_F5:

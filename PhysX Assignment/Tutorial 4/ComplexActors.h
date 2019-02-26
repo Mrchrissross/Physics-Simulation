@@ -5,6 +5,9 @@
 #include <vector>
 #include <stdlib.h> 
 
+#include "PhysicsEngine.h"
+#include "Extras/Renderer.h"
+
 namespace PhysicsEngine
 {
 	static const PxVec3 color_palette[] = 
@@ -32,6 +35,9 @@ namespace PhysicsEngine
 		PxMaterial* material;
 
 		bool addScore;
+		bool invalidScenario1;
+		bool invalidScenario2;
+		bool invalidScenario3;
 
 		Capsule* capRight;
 		Capsule* capLeft;
@@ -52,7 +58,7 @@ namespace PhysicsEngine
 			capRight = new Capsule(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec2(capSize, capSize), 15.0f);
 			RevoluteJoint* joint = new RevoluteJoint(ball, PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), capRight, PxTransform(PxVec3(0.25f, 0.0f, 0.0f)));
 			scene->AddActor(capRight);
-			
+
 			capLeft = new Capsule(PxTransform(PxVec3(position->x, position->y, position->z)), PxVec2(capSize, capSize), 15.0f);
 			joint = new RevoluteJoint(ball, PxTransform(PxVec3(0.0f, 0.0f, 0.0f), PxQuat(PxPi / 2, PxVec3(0.0f, 1.0f, 0.0f))), capLeft, PxTransform(PxVec3(-0.25f, 0.0f, 0.0f)));
 			scene->AddActor(capLeft);
@@ -521,4 +527,28 @@ namespace PhysicsEngine
 		}
 	};
 
+	class CustomSphere : public DynamicActor
+	{
+	public:
+		CustomSphere(const PxTransform & pose, PxVec3 dimensions, PxReal density) : DynamicActor(pose)
+		{
+			CreateShape(PxBoxGeometry(dimensions), density);
+		}
+
+		void Render()
+		{
+			//Get the position of this object
+			PxTransform pose = ((PxRigidBody*)GetRigidBody())->getGlobalPose();
+			PxMat44 shapePose(pose);
+			//move the opengl matrix to match the physx object
+			glPushMatrix();
+			glMultMatrixf((float*)&shapePose);
+
+			//currently, renderer is at center of mass of object, use standard opengl
+			glutSolidSphere(1.5, 6, 6);
+			//glutWireSphere(1.5, 6, 6);
+			//pop opengl matrix back to before
+			glPopMatrix();
+		}
+	};
 }
