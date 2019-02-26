@@ -151,8 +151,6 @@ namespace PhysicsEngine
 
 		MySimulationEventCallback* my_callback;
 
-		CustomSphere* myBox;
-
 		Plane* plane;
 		Ball* ball;
 		Ramp* ramp;

@@ -57,6 +57,9 @@
     <ClInclude Include="ComplexActors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HighResTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhysicsEngine.cpp">

@@ -527,6 +527,7 @@ namespace PhysicsEngine
 		}
 	};
 
+	// Custom Sphere
 	class CustomSphere : public DynamicActor
 	{
 	public:
@@ -538,13 +539,14 @@ namespace PhysicsEngine
 		void Render()
 		{
 			//Get the position of this object
-			PxTransform pose = ((PxRigidBody*)GetRigidBody())->getGlobalPose();
+			PxTransform pose = ((PxRigidBody*)GetPxActor())->getGlobalPose();
 			PxMat44 shapePose(pose);
 			//move the opengl matrix to match the physx object
 			glPushMatrix();
 			glMultMatrixf((float*)&shapePose);
 
 			//currently, renderer is at center of mass of object, use standard opengl
+			//glutSolidCone(3.0, 2.0, 6.0, 3.0);
 			glutSolidSphere(1.5, 6, 6);
 			//glutWireSphere(1.5, 6, 6);
 			//pop opengl matrix back to before

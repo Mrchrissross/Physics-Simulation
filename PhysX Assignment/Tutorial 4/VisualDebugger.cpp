@@ -1,9 +1,13 @@
 #include "VisualDebugger.h"
 #include <vector>
+#include <numeric>
+#include <iomanip>
+#include <sstream>
 #include "Extras\Camera.h"
 #include "Extras\Renderer.h"
 #include "Extras\HUD.h"
 #include "GameScene.h"
+#include "HighResTimer.h"
 
 namespace VisualDebugger
 {
@@ -50,6 +54,10 @@ namespace VisualDebugger
 	bool key_state[MAX_KEYS];
 	bool hud_show = true;
 	HUD hud;
+
+	HighResTimer timer;
+	vector<float> averageTime;
+	float finalAverageTime = 0;
 
 	//Init the debugger
 	void Init(const char *window_name, int width, int height)
@@ -160,7 +168,21 @@ namespace VisualDebugger
 		int height = scene->GetHeight();
 		int velocity = scene->GetVelocity();
 
-		hud.AmendLine(HELP, "   Distance: " + to_string(score) + " -  Height: " + to_string(height) + " -  Speed: " + to_string(velocity) + " -  FPS: " + to_string(int(fps)) + " -  Object Count: " + to_string(scene->objCounter));
+		//Set av. update time precision
+		stringstream stream1;
+		stream1 << fixed << setprecision(2) << (finalAverageTime / 100000);
+		string avTime = stream1.str();
+
+		stringstream stream2;
+		stream2 << fixed << setprecision(2) << (fps);
+		string _fps = stream2.str();
+
+		hud.AmendLine(HELP, "   Distance: " + to_string(score) + 
+							" -  Height: " + to_string(height) + 
+							" -  Speed: " + to_string(velocity) + 
+							" -  FPS: " + _fps + 
+							" -  Object Count: " + to_string(scene->objCounter) + 
+							" -  Average Update: " + avTime + "ns");
 
 		vector <int> scores = scene->GetScoreBoard();
 		vector <int> heights = scene->GetHeightBoard();
@@ -169,7 +191,7 @@ namespace VisualDebugger
 		if (size != scores.size())
 		{
 			hud.AddLine(PAUSE, "");
-			hud.AmendLine(PAUSE, "   " + to_string(scores.size()) + ". Distance: " + to_string(scores[scores.size() - 1]) + ". Height: " + to_string(heights[heights.size() - 1]) + ". Speed: " + to_string(int(velocities[velocities.size() - 1])));
+			hud.AmendLine(PAUSE, "   " + to_string(scores.size()) + ". Distance: " + to_string(scores[scores.size() - 1]) + " - Height: " + to_string(heights[heights.size() - 1]) + " - Speed: " + to_string(int(velocities[velocities.size() - 1])));
 			size = scores.size();
 		}
 
@@ -187,9 +209,6 @@ namespace VisualDebugger
 		//render HUD
 		hud.Render();
 
-		//render custom objects
-		scene->myBox->Render();
-
 		//finish rendering
 		Renderer::Finish();
 
@@ -204,8 +223,18 @@ namespace VisualDebugger
 			frame = 0;
 		}
 
+		timer.resetChronoTimer();
+
 		//perform a single simulation step
 		scene->SceneUpdate(delta_time);
+
+		//calculate average scene update time
+		averageTime.push_back(timer.getChronoTime());
+
+		if (averageTime.size() > 1000)
+			averageTime.erase(averageTime.begin());
+
+		finalAverageTime = accumulate(averageTime.begin(), averageTime.end(), 0.0) / averageTime.size();
 	}
 
 	// This is used for when a key is pressed.

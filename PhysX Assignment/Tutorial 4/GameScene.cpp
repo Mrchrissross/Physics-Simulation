@@ -92,9 +92,6 @@ namespace PhysicsEngine
 		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(10.0f, 20.0f, -70.0f), 2.0f, 1.975f));
 		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(-15.0f, 15.0f, -130.0f), 2.0f, 1.975f));
 
-		myBox = new CustomSphere(PxTransform(PxVec3(.0f, 10.f, 48.0f)), PxVec3(0.75f, 0.75f, 0.75f), 1.0f);
-		AddActor(myBox);
-
 		my_callback = new MySimulationEventCallback(ball, button);
 		px_scene->setSimulationEventCallback(my_callback);
 		
