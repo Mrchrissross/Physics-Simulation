@@ -2,9 +2,8 @@
 
 namespace PhysicsEngine
 {
-	
-	static int score = 0;
-	static vector <int> scores;
+	static int distance = 0;
+	static vector <int> distances;
 	static int height = 0;
 	static vector <int> heights;
 	static float velocity = 0;
@@ -86,135 +85,145 @@ namespace PhysicsEngine
 		button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult, 2.3f);
 
 		goalPosts.push_back(new GoalPost(this, new PxVec3(0.0f, 0.0f, -90.0f)));
+		scoreButton = new ScoreButton(this, new PxVec3(0.0f, 0.5f, 48.0f));
 		goalPosts.push_back(new GoalPost(this, new PxVec3(0.0f, 0.0f, -160.0f)));
 
 		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(-10.0f, 10.0f, -20.0f), 2.0f, 1.975f));
 		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(10.0f, 20.0f, -70.0f), 2.0f, 1.975f));
 		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(-15.0f, 15.0f, -130.0f), 2.0f, 1.975f));
 
-		my_callback = new MySimulationEventCallback(ball, button);
+		my_callback = new MySimulationEventCallback(ball, button, scoreButton);
 		px_scene->setSimulationEventCallback(my_callback);
 		
 	}
 
 	void GameScene::Update()
 	{
-		for (int i = 0; i < miniWindmills.size(); i++)
-		{
-			miniWindmills[i]->Update();
-		}
+		#pragma region Updates
+			for (int i = 0; i < miniWindmills.size(); i++)
+				miniWindmills[i]->Update();
 
-		for (int i = 0; i < wreckingBalls.size(); i++)
-		{
-			wreckingBalls[i]->Update();
-		}
+			for (int i = 0; i < wreckingBalls.size(); i++)
+				wreckingBalls[i]->Update();
 
-		button->Update();
-		catapult->Update();
+			button->Update();
+			catapult->Update();
+			scoreButton->Update(ball);
 
+		#pragma endregion
 
-		if ((-ball->GetPosition().z + 38) >= 0)
-		{
-			score = -ball->GetPosition().z + 38;
+		// Updating the UI elements - speed, height, and distance.
+			if ((-ball->GetPosition().z + 38) >= 0)
+			{
+				distance = -ball->GetPosition().z + 38;
 
-			// Determine Max Height
-			if (height < ball->GetPosition().y)
-				height = ball->GetPosition().y;
+				// Determine Max Height
+				if (height < ball->GetPosition().y)
+					height = ball->GetPosition().y;
 		
-			if (-velocity > ball->GetBall()->GetVelocity().z)
-				velocity = -ball->GetBall()->GetVelocity().z;
-		}
-		else
-			score = 0;
-
-		if (score > 5)
-			button->activated = false;
-
-		if (ball->addScore)
-		{
-			scores.push_back(score);
-			heights.push_back(height);
-			velocities.push_back(velocity);
-
-			height   = 0;
-			velocity = 0;
-
-			ball->Reset();
-
-			for (int i = 0; i < goalPosts.size(); i++)
-			{
-				goalPosts[i]->Reset();
+				if (-velocity > ball->GetBall()->GetVelocity().z)
+					velocity = -ball->GetBall()->GetVelocity().z;
 			}
-			for (int i = 0; i < bouncyBalls.size(); i++)
+			else
+				distance = 0;
+
+		// Stop the catapult from turning after a certain point
+			if (distance > 5)
+				button->activated = false;
+
+		// Reset sequence - when the player has either clicked reset or come in contact with the plane.
+			if (ball->addScore)
 			{
-				bouncyBalls[i]->Reset();
+				distances.push_back(distance);
+				heights.push_back(height);
+				velocities.push_back(velocity);
+
+				height   = 0;
+				velocity = 0;
+
+				ball->Reset();
+				scoreButton->Reset();
+
+				for (int i = 0; i < goalPosts.size(); i++)
+					goalPosts[i]->Reset();
+				
+				for (int i = 0; i < bouncyBalls.size(); i++)
+					bouncyBalls[i]->Reset();
+
+				ball->addScore = false;
 			}
 
-			ball->addScore = false;
-		}
+		#pragma region InvalidScenarios
 
-		if (ball->invalidScenario1)
-		{
-			int numberOfWB = 5;
-
-			for (int i = 0; i < numberOfWB; i++)
+			if (ball->invalidScenario1)
 			{
-				wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-15.0f, 17.0f, -155.0f + (15.0 * i)), 7.25));
+				int numberOfWB = 5;
+
+				for (int i = 0; i < numberOfWB; i++)
+				{
+					wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-15.0f, 17.0f, -155.0f + (15.0 * i)), 7.25));
 			
-				for (int y = 0; y < numberOfWB; y++)
-				{
-					wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-25.0f + (15.0 * y), 17.0f, -155.0f + (15.0 * i)), 7.25));
+					for (int y = 0; y < numberOfWB; y++)
+					{
+						wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-25.0f + (15.0 * y), 17.0f, -155.0f + (15.0 * i)), 7.25));
+					}
 				}
+
+				ball->invalidScenario1 = false;
 			}
 
-			ball->invalidScenario1 = false;
-		}
-
-		if (ball->invalidScenario2)
-		{
-			int numberOfWB = 7;
-
-			for (int i = 0; i < numberOfWB; i++)
+			if (ball->invalidScenario2)
 			{
-				wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-15.0f, 17.0f, -155.0f + (15.0 * i)), 7.25));
+				int numberOfWB = 7;
 
-				for (int y = 0; y < numberOfWB; y++)
+				for (int i = 0; i < numberOfWB; i++)
 				{
-					wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-35.0f + (15.0 * y), 17.0f, -155.0f + (15.0 * i)), 7.25));
+					wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-15.0f, 17.0f, -155.0f + (15.0 * i)), 7.25));
+
+					for (int y = 0; y < numberOfWB; y++)
+					{
+						wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-35.0f + (15.0 * y), 17.0f, -155.0f + (15.0 * i)), 7.25));
+					}
 				}
+
+				ball->invalidScenario2 = false;
 			}
 
-			ball->invalidScenario2 = false;
-		}
-
-		if (ball->invalidScenario3)
-		{
-			int numberOfWB = 10;
-
-			for (int i = 0; i < numberOfWB; i++)
+			if (ball->invalidScenario3)
 			{
-				wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-15.0f, 17.0f, -155.0f + (15.0 * i)), 7.25));
+				int numberOfWB = 10;
 
-				for (int y = 0; y < numberOfWB; y++)
+				for (int i = 0; i < numberOfWB; i++)
 				{
-					wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-75.0f + (15.0 * y), 17.0f, -155.0f + (15.0 * i)), 7.25));
+					wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-15.0f, 17.0f, -155.0f + (15.0 * i)), 7.25));
+
+					for (int y = 0; y < numberOfWB; y++)
+					{
+						wreckingBalls.push_back(new WreckingBall(this, new PxVec3(-75.0f + (15.0 * y), 17.0f, -155.0f + (15.0 * i)), 7.25));
+					}
 				}
+
+				ball->invalidScenario3 = false;
 			}
 
-			ball->invalidScenario3 = false;
-		}
+		#pragma endregion
 	}
 
 	#pragma region Scoring
 
 		int GameScene::GetScore()
 		{
-			return score;
+			return ball->score;
 		}
 
-		vector <int> GameScene::GetScoreBoard()
+		int GameScene::GetDistance()
 		{
-			return scores;
+			return distance;
+		}
+
+		vector <int> GameScene::GetDistanceBoard()
+		{
+			return distances;
 		}
 
 		int GameScene::GetHeight()

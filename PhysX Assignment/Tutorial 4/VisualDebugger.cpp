@@ -43,7 +43,7 @@ namespace VisualDebugger
 	
 	float camSpeed = 50.0f, fps = 0;
 	bool enableCameraMotion;
-	int size, score, time, timebase = 0, frame = 0;
+	int size, score, distance, time, timebase = 0, frame = 0;
 
 	///simulation objects
 	Camera* camera;
@@ -116,7 +116,7 @@ namespace VisualDebugger
 		hud.AddLine(PAUSE, "");
 		hud.AddLine(PAUSE, "   Ball Movement");
 		hud.AddLine(PAUSE, "      W,S,A,D - forward,backward,left,right");
-		hud.AddLine(PAUSE, "      R - Reset ball (adds score)");
+		hud.AddLine(PAUSE, "      R - Reset ball (saves score)");
 		hud.AddLine(PAUSE, "");
 		hud.AddLine(PAUSE, "   Catapult Movement");
 		hud.AddLine(PAUSE, "      1,3 - left,right");
@@ -165,6 +165,7 @@ namespace VisualDebugger
 		}
 
 		score = scene->GetScore();
+		distance = scene->GetDistance();
 		int height = scene->GetHeight();
 		int velocity = scene->GetVelocity();
 
@@ -177,22 +178,23 @@ namespace VisualDebugger
 		stream2 << fixed << setprecision(2) << (fps);
 		string _fps = stream2.str();
 
-		hud.AmendLine(HELP, "   Distance: " + to_string(score) + 
+		hud.AmendLine(HELP, "   Score: " + to_string(score) +
+							" -  Distance: " + to_string(distance) + 
 							" -  Height: " + to_string(height) + 
 							" -  Speed: " + to_string(velocity) + 
 							" -  FPS: " + _fps + 
 							" -  Object Count: " + to_string(scene->objCounter) + 
 							" -  Average Update: " + avTime + "ns");
 
-		vector <int> scores = scene->GetScoreBoard();
+		vector <int> distances = scene->GetDistanceBoard();
 		vector <int> heights = scene->GetHeightBoard();
 		vector <float> velocities = scene->GetVelocityBoard();
 
-		if (size != scores.size())
+		if (size != distances.size())
 		{
 			hud.AddLine(PAUSE, "");
-			hud.AmendLine(PAUSE, "   " + to_string(scores.size()) + ". Distance: " + to_string(scores[scores.size() - 1]) + " - Height: " + to_string(heights[heights.size() - 1]) + " - Speed: " + to_string(int(velocities[velocities.size() - 1])));
-			size = scores.size();
+			hud.AmendLine(PAUSE, "   " + to_string(distances.size()) + ". Distance: " + to_string(distances[distances.size() - 1]) + " - Height: " + to_string(heights[heights.size() - 1]) + " - Speed: " + to_string(int(velocities[velocities.size() - 1])));
+			size = distances.size();
 		}
 
 		//adjust the HUD state
@@ -305,7 +307,7 @@ namespace VisualDebugger
 			{
 				case 'W':
 				{
-					if(score < 1)
+					if(distance < 1)
 						scene->ball->addForce(PxVec3(0, 0, -1));
 					break;
 				}

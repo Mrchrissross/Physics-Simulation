@@ -1,1 +1,5 @@
-﻿
+﻿  GameScene.cpp
+  VisualDebugger.cpp
+c:\users\mrchr\documents\github\physics-simulation\physx assignment\tutorial 4\visualdebugger.cpp(197): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  Tutorial 4.vcxproj -> C:\Users\mrchr\Documents\Github\Physics-Simulation\PhysX Assignment\x64\Debug\PhysX Assignment.exe

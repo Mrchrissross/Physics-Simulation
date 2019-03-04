@@ -34,6 +34,8 @@ namespace PhysicsEngine
 		PxTransform originalPosition;
 		PxMaterial* material;
 
+		int score = 0;
+
 		bool addScore;
 		bool invalidScenario1;
 		bool invalidScenario2;
@@ -107,13 +109,14 @@ namespace PhysicsEngine
 			material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, bounciness);
 			ball->SetMaterial(material);
 			ball->SetColor(color_palette[7]);
-			ball->SetMass(1.0f); // Rugby Ball Weight = 0.94798750009838 pounds
+			ball->SetMass(1.0f);
 			scene->AddActor(ball);
 		}
 
 		void Reset()
 		{
 			ball->SetPosition(PxVec3(originalPosition->x, originalPosition->y, originalPosition->z));
+			ball->GetPxActor()->isRigidDynamic()->setLinearVelocity(PxVec3(0, 0, 0));
 		}
 	};
 
@@ -284,8 +287,12 @@ namespace PhysicsEngine
 		vector<PxVec3> positions;
 		vector<PxQuat> rotations;
 
+		PxVec3* originPosition;
+
 		GoalPost(Scene* scene, PxVec3* position, int boxNumber = 18)
 		{
+			originPosition = position;
+
 			int bar = (boxNumber / 6) * 5;
 			material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, 0.0f);
 			int y = 0;
@@ -524,6 +531,46 @@ namespace PhysicsEngine
 		void SetPosition()
 		{
 			((PxRigidDynamic*)Button->GetPxActor())->setGlobalPose(PxTransform(PxVec3(catapult->originalPos->x + 1.6f, catapult->originalPos->y + 3.8f, catapult->originalPos->z + buttonPosition)));
+		}
+	};
+
+	class ScoreButton
+	{
+	public:
+		Box* Button;
+		bool activated;
+		bool pressed;
+
+		GoalPost* post;
+
+		ScoreButton(Scene* scene, PxVec3* position)
+		{
+			Button = new Box(PxTransform(PxVec3(position->x, position->y, position->z), PxQuat(0.0f, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(1.0f, 1.0f, 1.0f));
+			Button->SetKinematic(true);
+			Button->SetColor(color_palette[10]);
+			Button->SetName("ScoreButton");
+			Button->SetTrigger(true);
+			scene->AddActor(Button);
+		}
+
+		void Update(Ball* ball)
+		{
+			if (activated && !pressed)
+			{
+				// The player has scored
+				ball->score++;
+				Button->SetColor(color_palette[4]);
+
+				activated = false;
+				pressed = true;
+			}
+		}
+
+		void Reset()
+		{
+			pressed = false;
+			activated = false;
+			Button->SetColor(color_palette[10]);
 		}
 	};
 
