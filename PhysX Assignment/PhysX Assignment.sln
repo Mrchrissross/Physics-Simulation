@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27428.2043
+VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysX Sim", "Tutorial 4\Tutorial 4.vcxproj", "{60A30BB9-180C-4C50-AD2C-C519A11E1AFE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial 4", "Tutorial 4\Tutorial 4.vcxproj", "{60A30BB9-180C-4C50-AD2C-C519A11E1AFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A011A74B-29B1-4277-8BA8-5760B37A9D56}
+		SolutionGuid = {56B9245C-8617-4E5C-B15A-9EBD8EE39509}
 	EndGlobalSection
 EndGlobal

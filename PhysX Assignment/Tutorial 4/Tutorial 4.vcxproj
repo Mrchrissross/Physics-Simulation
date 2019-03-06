@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicActors.h" />
+    <ClInclude Include="ComplexActors.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="Extras\Camera.h" />
     <ClInclude Include="Extras\GLFontData.h" />
@@ -28,9 +29,8 @@
     <ClInclude Include="Extras\Renderer.h" />
     <ClInclude Include="Extras\UserData.h" />
     <ClInclude Include="GameScene.h" />
-    <ClInclude Include="PhysicsEngine.h" />
-    <ClInclude Include="ComplexActors.h" />
     <ClInclude Include="HighResTimer.h" />
+    <ClInclude Include="PhysicsEngine.h" />
     <ClInclude Include="VisualDebugger.h" />
   </ItemGroup>
   <ItemGroup>
@@ -39,14 +39,14 @@
     <ClCompile Include="Extras\Renderer.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="PhysicsEngine.cpp" />
-    <ClCompile Include="VisualDebugger.cpp" />
     <ClCompile Include="Start.cpp" />
+    <ClCompile Include="VisualDebugger.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{60A30BB9-180C-4C50-AD2C-C519A11E1AFE}</ProjectGuid>
-    <RootNamespace>Source</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>PhysX Assignment</ProjectName>
+    <RootNamespace>Workshop1</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>PhysX  Assignment</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -374,7 +374,6 @@ namespace VisualDebugger
 			break;
 		case GLUT_KEY_F8:
 			break;
-			//simulation control
 		case GLUT_KEY_F9:
 			//enable camera motion
 			enableCameraMotion = !enableCameraMotion;
