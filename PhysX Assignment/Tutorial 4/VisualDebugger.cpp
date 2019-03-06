@@ -105,7 +105,7 @@ namespace VisualDebugger
 		hud.AddLine(EMPTY, "");
 		//add a help screen
 		hud.AddLine(HELP, "");
-		hud.AddLine(HELP, "   Press F1 to pause simulation.");
+		hud.AddLine(HELP, "   Press F1 to pause simulation and see controls.");
 		hud.AddLine(HELP, "   Press F2-4 to enable invalid Scenarios (No Return).");
 		hud.AddLine(HELP, "   Press R to Reset simulation.");
 		hud.AddLine(HELP, "");

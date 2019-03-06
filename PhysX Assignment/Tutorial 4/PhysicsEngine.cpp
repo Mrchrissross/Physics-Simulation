@@ -322,7 +322,7 @@ namespace PhysicsEngine
 	void Scene::AddActor(Actor* actor)
 	{
 		objCounter++;
-		cout << "Object Count: " << objCounter << endl;
+		//cout << "Object Count: " << objCounter << endl;
 		px_scene->addActor(*actor->GetPxActor());
 	}
 

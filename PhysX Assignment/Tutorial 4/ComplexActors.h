@@ -365,6 +365,46 @@ namespace PhysicsEngine
 		}
 	};
 
+	class ScoreButton
+	{
+	public:
+		Box* Button;
+		bool activated;
+		bool pressed;
+
+		GoalPost* post;
+
+		ScoreButton(Scene* scene, PxVec3* position)
+		{
+			Button = new Box(PxTransform(PxVec3(position->x, position->y, position->z), PxQuat(0.0f, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(2.0f, 1.0f, 0.5f));
+			Button->SetKinematic(true);
+			Button->SetColor(color_palette[10]);
+			Button->SetName("ScoreButton");
+			Button->SetTrigger(true);
+			scene->AddActor(Button);
+		}
+
+		void Update(Ball* ball)
+		{
+			if (activated && !pressed)
+			{
+				// The player has scored
+				ball->score++;
+				Button->SetColor(color_palette[4]);
+
+				activated = false;
+				pressed = true;
+			}
+		}
+
+		void Reset()
+		{
+			pressed = false;
+			activated = false;
+			Button->SetColor(color_palette[10]);
+		}
+	};
+
 	class WobblyPlatform
 	{
 	public:
@@ -531,46 +571,6 @@ namespace PhysicsEngine
 		void SetPosition()
 		{
 			((PxRigidDynamic*)Button->GetPxActor())->setGlobalPose(PxTransform(PxVec3(catapult->originalPos->x + 1.6f, catapult->originalPos->y + 3.8f, catapult->originalPos->z + buttonPosition)));
-		}
-	};
-
-	class ScoreButton
-	{
-	public:
-		Box* Button;
-		bool activated;
-		bool pressed;
-
-		GoalPost* post;
-
-		ScoreButton(Scene* scene, PxVec3* position)
-		{
-			Button = new Box(PxTransform(PxVec3(position->x, position->y, position->z), PxQuat(0.0f, PxVec3(0.0f, 1.0f, 0.0f))), PxVec3(1.0f, 1.0f, 1.0f));
-			Button->SetKinematic(true);
-			Button->SetColor(color_palette[10]);
-			Button->SetName("ScoreButton");
-			Button->SetTrigger(true);
-			scene->AddActor(Button);
-		}
-
-		void Update(Ball* ball)
-		{
-			if (activated && !pressed)
-			{
-				// The player has scored
-				ball->score++;
-				Button->SetColor(color_palette[4]);
-
-				activated = false;
-				pressed = true;
-			}
-		}
-
-		void Reset()
-		{
-			pressed = false;
-			activated = false;
-			Button->SetColor(color_palette[10]);
 		}
 	};
 

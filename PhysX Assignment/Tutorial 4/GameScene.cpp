@@ -85,7 +85,7 @@ namespace PhysicsEngine
 		button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult, 2.3f);
 
 		goalPosts.push_back(new GoalPost(this, new PxVec3(0.0f, 0.0f, -90.0f)));
-		scoreButton = new ScoreButton(this, new PxVec3(0.0f, 0.5f, 48.0f));
+		scoreButton = new ScoreButton(this, new PxVec3(0.0f, 9.8f, -90.0f));
 		goalPosts.push_back(new GoalPost(this, new PxVec3(0.0f, 0.0f, -160.0f)));
 
 		bouncyBalls.push_back(new BouncyBall(this, new PxVec3(-10.0f, 10.0f, -20.0f), 2.0f, 1.975f));
