@@ -33,6 +33,8 @@ namespace PhysicsEngine
 		plane->SetName("Plane");
 		AddActor(plane);
 
+		plane->SetupFiltering(PLANE, BALL);
+
 		// Create Ball
 		ball = new Ball(this, new PxVec3(0, 3, 50)); // Orig pos: 0, 3, 50
 

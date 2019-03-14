@@ -10,8 +10,10 @@ namespace PhysicsEngine
 {
 	class MySimulationEventCallback : public PxSimulationEventCallback
 	{
+
 	public:
 		bool trigger;
+		bool contact = true;
 		Ball* ball;
 		CatapultButton* button;
 		ScoreButton* scoreButton;
@@ -74,15 +76,78 @@ namespace PhysicsEngine
 		}
 
 		///Method called when the contact by the filter shader is detected.
-		virtual void onContact(const PxContactPairHeader &pairHeader, const PxContactPair *pairs, PxU32 nbPairs){}
+		virtual void onContact(const PxContactPairHeader &pairHeader, const PxContactPair *pairs, PxU32 nbPairs)
+		{
+			cerr << "Contact found between " << pairHeader.actors[0]->getName() << " " << pairHeader.actors[1]->getName() << endl;
+			if (contact) {
+				//check all pairs
+				for (PxU32 i = 0; i < nbPairs; i++)
+				{
+					switch (pairs[i].shapes[0]->getSimulationFilterData().word0)
+					{
+					case BALL:
+						cerr << "Ball..." << endl;
+						break;
+					case PLANE:
+						cerr << "Plane Hit!" << endl;
+						break;
+					case BUTTON:
+						cerr << "Button Hit!" << endl;
+						break;
+					case SCOREBUTTON:
+						cerr << "PlaneButton Hit!" << endl;
+						break;
+					}
+				}
+				contact = false;
+			}
+
+		}
+
 		virtual void onConstraintBreak(PxConstraintInfo *constraints, PxU32 count) {}
 		virtual void onWake(PxActor **actors, PxU32 count) {}
 		virtual void onSleep(PxActor **actors, PxU32 count) {}
 	};
 
+	//A simple filter shader based on PxDefaultSimulationFilterShader - without group filtering
+	static PxFilterFlags CustomFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+		PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+		PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
+	{
+		// let triggers through
+		if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1))
+		{
+			pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+			return PxFilterFlags();
+		}
+
+		//enable continous collision detection
+		pairFlags = PxPairFlag::eSOLVE_CONTACT;
+		pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT;
+		pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT;
+
+
+		//customise collision filtering here
+		//e.g.
+
+		// trigger the contact callback for pairs (A,B) where 
+		// the filtermask of A contains the ID of B and vice versa.
+		if ((filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1))
+		{
+			//trigger onContact callback for this pair of objects
+			pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
+			pairFlags |= PxPairFlag::eNOTIFY_TOUCH_LOST;
+			//			pairFlags |= PxPairFlag::eNOTIFY_CONTACT_POINTS;
+		}
+
+		return PxFilterFlags();
+	};
+
 	class GameScene : public Scene
 	{
 	public:
+		GameScene() : Scene(CustomFilterShader) {};
+
 		void SetVisualisation();
 		virtual void Init();
 		virtual void Update();

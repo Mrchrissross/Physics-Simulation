@@ -10,6 +10,14 @@
 
 namespace PhysicsEngine
 {
+	enum FilterGroup
+	{
+		BALL = (1 << 0),
+		PLANE = (1 << 1),
+		BUTTON = (1 << 2),
+		SCOREBUTTON = (1 << 3)
+	};
+
 	static const PxVec3 color_palette[] = 
 	{
 		PxVec3(	41.0f / 255.0f,		35.0f / 255.0f,		56.0f / 255.0f),
@@ -54,6 +62,9 @@ namespace PhysicsEngine
 			ball->SetMass(0.94798750009838f); // Rugby Ball Weight = 0.94798750009838 pounds
 			ball->SetName("Ball");
 			scene->AddActor(ball);
+			
+
+			ball->SetupFiltering(BALL, PLANE | BUTTON | SCOREBUTTON);
 
 			float capSize = 0.15f;
 			
@@ -382,6 +393,8 @@ namespace PhysicsEngine
 			Button->SetName("ScoreButton");
 			Button->SetTrigger(true);
 			scene->AddActor(Button);
+
+			Button->SetupFiltering(SCOREBUTTON, BALL);
 		}
 
 		void Update(Ball* ball)
@@ -550,6 +563,8 @@ namespace PhysicsEngine
 			Button->SetName("Button");
 			Button->SetTrigger(true);
 			scene->AddActor(Button);
+
+			Button->SetupFiltering(BUTTON, BALL);
 		}
 
 		void Update()
