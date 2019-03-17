@@ -145,6 +145,7 @@ namespace VisualDebugger
 	//Render the scene and perform a single simulation step
 	void RenderScene()
 	{
+		// Position the camera so that it is always directly behind the ball.
 		if (scene->ball != nullptr && !enableCameraMotion)
 			camera->setEye(scene->ball->GetPosition() - PxVec3(0.0f, -2.5f, -5.0f));
 
@@ -154,6 +155,7 @@ namespace VisualDebugger
 		//start rendering
 		Renderer::Start(camera->getEye(), camera->getDir());
 
+		// Render modes
 		if ((render_mode == DEBUG) || (render_mode == BOTH))
 			Renderer::Render(scene->GetScene()->getRenderBuffer());
 
@@ -164,10 +166,14 @@ namespace VisualDebugger
 				Renderer::Render(&actors[0], (PxU32)actors.size());
 		}
 
+		// Get all the UI elements from the game scene class.
 		score = scene->GetScore();
 		distance = scene->GetDistance();
 		int height = scene->GetHeight();
 		int velocity = scene->GetVelocity();
+		vector <int> distances = scene->GetDistanceBoard();
+		vector <int> heights = scene->GetHeightBoard();
+		vector <float> velocities = scene->GetVelocityBoard();
 
 		//Set av. update time precision
 		stringstream stream1;
@@ -178,6 +184,7 @@ namespace VisualDebugger
 		stream2 << fixed << setprecision(2) << (fps);
 		string _fps = stream2.str();
 
+		// Amend lines on the UI  to include all the scores and other UI elements.
 		hud.AmendLine(HELP, "   Score: " + to_string(score) +
 							" -  Distance: " + to_string(distance) + 
 							" -  Height: " + to_string(height) + 
@@ -186,10 +193,7 @@ namespace VisualDebugger
 							" -  Object Count: " + to_string(scene->objCounter) + 
 							" -  Average Update: " + avTime + "ns");
 
-		vector <int> distances = scene->GetDistanceBoard();
-		vector <int> heights = scene->GetHeightBoard();
-		vector <float> velocities = scene->GetVelocityBoard();
-
+		// Update the score board that can be found on the pause menu.
 		if (size != distances.size())
 		{
 			hud.AddLine(PAUSE, "");
@@ -214,29 +218,41 @@ namespace VisualDebugger
 		//finish rendering
 		Renderer::Finish();
 
-		frame++;
+		#pragma region FPS Count
 
-		time = glutGet(GLUT_ELAPSED_TIME);
+			// Calculate the frames per second.
+			frame++;
 
-		if (time - timebase > 1000)
-		{
-			fps = frame * 1000.0 / (time - timebase);
-			timebase = time;
-			frame = 0;
-		}
+			time = glutGet(GLUT_ELAPSED_TIME);
 
-		timer.resetChronoTimer();
+			if (time - timebase > 1000)
+			{
+				fps = frame * 1000.0 / (time - timebase);
+				timebase = time;
+				frame = 0;
+			}
 
-		//perform a single simulation step
-		scene->SceneUpdate(delta_time);
+		#pragma endregion
 
-		//calculate average scene update time
-		averageTime.push_back(timer.getChronoTime());
+		#pragma region SceneUpdate
 
-		if (averageTime.size() > 1000)
-			averageTime.erase(averageTime.begin());
+			// Reset the timer.
+			timer.resetChronoTimer();
 
-		finalAverageTime = accumulate(averageTime.begin(), averageTime.end(), 0.0) / averageTime.size();
+			// Update the scene.
+			scene->SceneUpdate(delta_time);
+
+			// Add the amount of time that scene update took to perform its tasks.
+			averageTime.push_back(timer.getChronoTime());
+
+			// If the averageTime vector goes above 1000, erase the oldest input.
+			if (averageTime.size() > 1000)
+				averageTime.erase(averageTime.begin());
+
+			// Create an average from all of the elements within the averageTime vector.
+			finalAverageTime = accumulate(averageTime.begin(), averageTime.end(), 0.0) / averageTime.size();
+
+		#pragma endregion
 	}
 
 	// This is used for when a key is pressed.
@@ -244,11 +260,14 @@ namespace VisualDebugger
 	{
 		switch (toupper(key))
 		{
+
+		// If the user presses R, the ball is reset.
 		case 'R':
 			scene->ball->addScore = true;
 			break;
 		default:
 			break;
+
 		}
 	}
 
@@ -275,6 +294,7 @@ namespace VisualDebugger
 		if (!scene->GetSelectedActor())
 			return;
 
+		// If the player has pressed the F9 key and enabled camera movement rather than player movement.
 		if(enableCameraMotion)
 		{
 			switch (toupper(key))
@@ -301,6 +321,7 @@ namespace VisualDebugger
 				break;
 			}
 		}
+		// If the camera movement is not enabled then the player will move the ball.
 		else
 		{
 			switch (toupper(key))
@@ -448,6 +469,7 @@ namespace VisualDebugger
 		mMouseY = y;
 	}
 
+	///toggle between render modes
 	void ToggleRenderMode()
 	{
 		if (render_mode == NORMAL)

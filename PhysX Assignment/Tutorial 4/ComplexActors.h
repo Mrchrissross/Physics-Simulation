@@ -10,12 +10,15 @@
 
 namespace PhysicsEngine
 {
+
+	// Create an enum to be used for collision.
 	enum FilterGroup
 	{
 		BALL = (1 << 0),
 		GOALPOST = (1 << 1)
 	};
 
+	// Create a colour palette that contains all the desired colours.
 	static const PxVec3 color_palette[] = 
 	{
 		PxVec3(	41.0f / 255.0f,		35.0f / 255.0f,		56.0f / 255.0f),
@@ -30,6 +33,8 @@ namespace PhysicsEngine
 		PxVec3(	0.0f / 255.0f,		0.0f / 255.0f,		0.0f / 255.0f),
 		PxVec3(	255.0f / 255.0f,	255.0f / 255.0f,	255.0f / 255.0f)
 	};
+
+	// Below are all of the game objects that have been created for use within this game.
 
 	class Ball
 	{

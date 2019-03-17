@@ -20,79 +20,96 @@ namespace PhysicsEngine
 
 		MySimulationEventCallback(Ball* _ball, CatapultButton* _button, ScoreButton* _scoreButton) : trigger(false), ball(_ball), button(_button), scoreButton(_scoreButton) {}
 
-		///Method called when the contact with the trigger object is detected.
-		virtual void onTrigger(PxTriggerPair* pairs, PxU32 count)
-		{
-			//you can read the trigger information here
-			for (PxU32 i = 0; i < count; i++)
+		#pragma region OnTrigger
+
+			// Triggers are better used on objects that are kinematic to avoid unpredictable behaviour.
+
+			///Method called when the contact with the trigger object is detected.
+			virtual void onTrigger(PxTriggerPair* pairs, PxU32 count)
 			{
-				if (pairs[i].otherShape->getGeometryType() != PxGeometryType::eBOX)
+				//you can read the trigger information here
+				for (PxU32 i = 0; i < count; i++)
 				{
-					//check if eNOTIFY_TOUCH_FOUND trigger (On Trigger Enter)
-					if ((pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_FOUND) && !trigger)
+					if (pairs[i].otherShape->getGeometryType() != PxGeometryType::eBOX)
 					{
-						object = pairs[i];
-						OnTriggerEnter();
+						//check if eNOTIFY_TOUCH_FOUND trigger (On Trigger Enter)
+						if ((pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_FOUND) && !trigger)
+						{
+							object = pairs[i];
+							OnTriggerEnter();
 
-						cerr << "OnTriggerEnter: " << object.triggerActor->getName() << endl;
-						trigger = true;
-					}
+							cerr << "OnTriggerEnter: " << object.triggerActor->getName() << endl;
+							trigger = true;
+						}
 
-					//check if eNOTIFY_TOUCH_LOST trigger (On Trigger Exit)
-					if ((pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_LOST) && trigger)
-					{
-						cerr << "OnTriggerExit: " << object.triggerActor->getName() << endl;
-						trigger = false;
+						//check if eNOTIFY_TOUCH_LOST trigger (On Trigger Exit)
+						if ((pairs[i].status & PxPairFlag::eNOTIFY_TOUCH_LOST) && trigger)
+						{
+							cerr << "OnTriggerExit: " << object.triggerActor->getName() << endl;
+							trigger = false;
+						}
 					}
 				}
 			}
-		}
 
-		// Add collisions here.
-		void OnTriggerEnter()
-		{
-			//If the ball touches the button.
-			if (CheckCollision("Button"))
-				button->activated = true;
-
-			//If the ball touches the score button.
-			if (CheckCollision("ScoreButton"))
-				scoreButton->activated = true;
-
-			// If the ball touches the plane.
-			if (CheckCollision("Plane"))
-				ball->addScore = true;
-		}
-
-		bool CheckCollision(const char* _object)
-		{
-			bool collision = false;
-
-			if (std::strcmp(object.triggerActor->getName(), _object) == 0)
-				collision = true;
-
-			return collision;
-		}
-
-		///Method called when the contact by the filter shader is detected.
-		virtual void onContact(const PxContactPairHeader &pairHeader, const PxContactPair *pairs, PxU32 nbPairs)
-		{
-			cerr << "Contact found between " << pairHeader.actors[0]->getName() << " and " << pairHeader.actors[1]->getName() << endl;
-				
-			//check all pairs
-			for (PxU32 i = 0; i < nbPairs; i++)
+			// Add collisions here.
+			void OnTriggerEnter()
 			{
-				switch (pairs[i].shapes[0]->getSimulationFilterData().word0)
+				//If the ball touches the one of the following objects, they will be trigger causing their function to activated.
+				// For example: if the ball touches the button, the boolean located in the button class will become active, thus activating the catapult.
+
+				if (CheckCollision("Button"))
+					button->activated = true;
+
+				if (CheckCollision("ScoreButton"))
+					scoreButton->activated = true;
+
+				if (CheckCollision("Plane"))
+					ball->addScore = true;
+			}
+
+			// A simple collision check that is checked each frame.
+			bool CheckCollision(const char* _object)
+			{
+				bool collision = false;
+
+				// If the object trigger actor is the same as the objects trigger name...
+				if (std::strcmp(object.triggerActor->getName(), _object) == 0)
+					// then a collision is happen and the collision bool is returned true.
+					collision = true;
+
+				return collision;
+			}
+
+		#pragma endregion
+
+		#pragma region OnContact
+
+			// Contacts are better used on objects or large groups that are none kinematic and are able to move.
+
+			///Method called when the contact by the filter shader is detected.
+			virtual void onContact(const PxContactPairHeader &pairHeader, const PxContactPair *pairs, PxU32 nbPairs)
+			{
+				// If a collision has happened between one of the actors found in the filter group, display a notification on the cmd.
+				cerr << "Contact found between " << pairHeader.actors[0]->getName() << " and " << pairHeader.actors[1]->getName() << endl;
+
+				// Go through all the pairs and find out which actors they were...
+				for (PxU32 i = 0; i < nbPairs; i++)
 				{
-				case BALL:
-					cerr << "Ball..." << endl;
-					break;
-				case GOALPOST:
-					cerr << "GoalPost Hit!" << endl;
-					break;
+					// and activate their function.
+					switch (pairs[i].shapes[0]->getSimulationFilterData().word0)
+					{
+					case BALL:
+						cerr << "Ball..." << endl;
+						break;
+					case GOALPOST:
+						cerr << "GoalPost Hit!" << endl;
+						break;
+					}
 				}
 			}
-		}
+
+		#pragma endregion
 
 		virtual void onConstraintBreak(PxConstraintInfo *constraints, PxU32 count) {}
 		virtual void onWake(PxActor **actors, PxU32 count) {}
@@ -137,33 +154,41 @@ namespace PhysicsEngine
 	{
 	public:
 		GameScene() : Scene(CustomFilterShader) {};
-
-		void SetVisualisation();
-		virtual void Init();
-		virtual void Update();
-		virtual int GetScore();
-		virtual int GetDistance();
-		virtual int GetHeight();
-		virtual float GetVelocity();
-		virtual vector <int> GetDistanceBoard();
-		virtual vector <int> GetHeightBoard();
-		virtual vector <float> GetVelocityBoard();
-
 		MySimulationEventCallback* my_callback;
 
-		Plane* plane;
-		Ball* ball;
-		Ramp* ramp;
-		Cloth* cloth;
-		Catapult* catapult;
-		CatapultButton* button;
-		Flooring* startingFloor;
-		vector <Flooring*> flooring;
-		vector <MiniWindmill*> miniWindmills;
-		WobblyPlatform* wobblyPlatform;
-		vector <WreckingBall*> wreckingBalls;
-		vector <GoalPost*> goalPosts;
-		ScoreButton* scoreButton;
-		vector<BouncyBall*> bouncyBalls;
+		#pragma region Functions
+
+			void SetVisualisation();
+			virtual void Init();
+			virtual void Update();
+			virtual int GetScore();
+			virtual int GetDistance();
+			virtual int GetHeight();
+			virtual float GetVelocity();
+			virtual vector <int> GetDistanceBoard();
+			virtual vector <int> GetHeightBoard();
+			virtual vector <float> GetVelocityBoard();
+
+		#pragma endregion
+
+		#pragma region Objects
+
+			Plane* plane;
+			Ball* ball;
+			Ramp* ramp;
+			Cloth* cloth;
+			Catapult* catapult;
+			CatapultButton* button;
+			Flooring* startingFloor;
+			vector <Flooring*> flooring;
+			vector <MiniWindmill*> miniWindmills;
+			WobblyPlatform* wobblyPlatform;
+			vector <WreckingBall*> wreckingBalls;
+			vector <GoalPost*> goalPosts;
+			ScoreButton* scoreButton;
+			ScoreButton* scoreButton2;
+			vector<BouncyBall*> bouncyBalls;
+
+		#pragma endregion
 	};
 }
