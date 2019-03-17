@@ -22,9 +22,9 @@ namespace PhysicsEngine
 
 	void GameScene::Init()
 	{
-		SetVisualisation();
+		px_scene->setFlag(PxSceneFlag::eENABLE_CCD, true);
 
-		GetMaterial()->setRestitution(0.0f);
+		SetVisualisation();
 
 		// Create Plane
 		plane = new Plane();
@@ -32,8 +32,6 @@ namespace PhysicsEngine
 		plane->SetTrigger(true);
 		plane->SetName("Plane");
 		AddActor(plane);
-
-		plane->SetupFiltering(PLANE, BALL);
 
 		// Create Ball
 		ball = new Ball(this, new PxVec3(0, 3, 50)); // Orig pos: 0, 3, 50

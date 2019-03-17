@@ -13,7 +13,6 @@ namespace PhysicsEngine
 
 	public:
 		bool trigger;
-		bool contact = true;
 		Ball* ball;
 		CatapultButton* button;
 		ScoreButton* scoreButton;
@@ -78,30 +77,21 @@ namespace PhysicsEngine
 		///Method called when the contact by the filter shader is detected.
 		virtual void onContact(const PxContactPairHeader &pairHeader, const PxContactPair *pairs, PxU32 nbPairs)
 		{
-			cerr << "Contact found between " << pairHeader.actors[0]->getName() << " " << pairHeader.actors[1]->getName() << endl;
-			if (contact) {
-				//check all pairs
-				for (PxU32 i = 0; i < nbPairs; i++)
+			cerr << "Contact found between " << pairHeader.actors[0]->getName() << " and " << pairHeader.actors[1]->getName() << endl;
+				
+			//check all pairs
+			for (PxU32 i = 0; i < nbPairs; i++)
+			{
+				switch (pairs[i].shapes[0]->getSimulationFilterData().word0)
 				{
-					switch (pairs[i].shapes[0]->getSimulationFilterData().word0)
-					{
-					case BALL:
-						cerr << "Ball..." << endl;
-						break;
-					case PLANE:
-						cerr << "Plane Hit!" << endl;
-						break;
-					case BUTTON:
-						cerr << "Button Hit!" << endl;
-						break;
-					case SCOREBUTTON:
-						cerr << "PlaneButton Hit!" << endl;
-						break;
-					}
+				case BALL:
+					cerr << "Ball..." << endl;
+					break;
+				case GOALPOST:
+					cerr << "GoalPost Hit!" << endl;
+					break;
 				}
-				contact = false;
 			}
-
 		}
 
 		virtual void onConstraintBreak(PxConstraintInfo *constraints, PxU32 count) {}
@@ -137,7 +127,7 @@ namespace PhysicsEngine
 			//trigger onContact callback for this pair of objects
 			pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
 			pairFlags |= PxPairFlag::eNOTIFY_TOUCH_LOST;
-			//			pairFlags |= PxPairFlag::eNOTIFY_CONTACT_POINTS;
+			//pairFlags |= PxPairFlag::eNOTIFY_CONTACT_POINTS;
 		}
 
 		return PxFilterFlags();

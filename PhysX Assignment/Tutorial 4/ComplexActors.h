@@ -13,9 +13,7 @@ namespace PhysicsEngine
 	enum FilterGroup
 	{
 		BALL = (1 << 0),
-		PLANE = (1 << 1),
-		BUTTON = (1 << 2),
-		SCOREBUTTON = (1 << 3)
+		GOALPOST = (1 << 1)
 	};
 
 	static const PxVec3 color_palette[] = 
@@ -63,8 +61,7 @@ namespace PhysicsEngine
 			ball->SetName("Ball");
 			scene->AddActor(ball);
 			
-
-			ball->SetupFiltering(BALL, PLANE | BUTTON | SCOREBUTTON);
+			ball->SetupFiltering(BALL, GOALPOST);
 
 			float capSize = 0.15f;
 			
@@ -345,8 +342,15 @@ namespace PhysicsEngine
 				boxes[i - 1]->SetMaterial(material);
 				boxes[i]->SetMaterial(material);
 
+				boxes[i - 1]->SetName("GoalPost");
+				boxes[i]->SetName("GoalPost");
+
 				scene->AddActor(boxes[i - 1]);
 				scene->AddActor(boxes[i]);
+
+				boxes[i - 1]->SetupFiltering(GOALPOST, BALL);
+				boxes[i]->SetupFiltering(GOALPOST, BALL);
+
 			}
 				
 			for (int i = 0; i < boxes.size(); i++)
@@ -393,8 +397,6 @@ namespace PhysicsEngine
 			Button->SetName("ScoreButton");
 			Button->SetTrigger(true);
 			scene->AddActor(Button);
-
-			Button->SetupFiltering(SCOREBUTTON, BALL);
 		}
 
 		void Update(Ball* ball)
@@ -563,8 +565,6 @@ namespace PhysicsEngine
 			Button->SetName("Button");
 			Button->SetTrigger(true);
 			scene->AddActor(Button);
-
-			Button->SetupFiltering(BUTTON, BALL);
 		}
 
 		void Update()
