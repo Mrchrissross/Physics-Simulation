@@ -70,6 +70,8 @@ namespace PhysicsEngine
 			material = scene->GetScene()->getPhysics().createMaterial(0.0f, 10.0f, 0.8f);
 			ball->SetMaterial(material);
 
+			ball->SetColor(PxVec3(25.0f / 255.0f, 25.0f / 255.0f, 25.0f / 255.0f));
+
 			// Assign mass
 			ball->SetMass((0.94798750009838f * 3)); // Rugby Ball Weight = 0.94798750009838 pounds
 			
