@@ -293,11 +293,19 @@ namespace VisualDebugger
 
 		void Render(PxActor** actors, const PxU32 numActors)
 		{
-			PxVec3 shadow_color = default_color*0.9;
-			for(PxU32 i=0;i<numActors;i++)
+			PxVec3 shadow_color = default_color * 0.9;
+			for(PxU32 i = 0; i < numActors; i++)
 			{
-				if (actors[i]->getName() == "ScoreButton")
-					continue;
+				const char* name = actors[i]->getName();
+
+				if (name)
+				{
+					if (std::strcmp(name, "ScoreButton") == 0)
+						continue;
+
+					if (std::strcmp(name, "Button") == 0)
+						continue;
+				}
 
 				if (actors[i]->isCloth())
 				{

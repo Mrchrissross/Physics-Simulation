@@ -328,7 +328,7 @@ namespace VisualDebugger
 			{
 				case 'W':
 				{
-					if(distance < 1)
+					if(distance < 2)
 						scene->ball->addForce(PxVec3(0, 0, -1));
 					break;
 				}

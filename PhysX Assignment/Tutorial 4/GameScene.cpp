@@ -55,7 +55,7 @@ namespace PhysicsEngine
 			// Create the catapult that can be moved by the player.
 			catapult = new Catapult(this, new PxVec3(0.0f, -1.77f, 33.9f), 1.0f);
 			// Create the button used to activate the catapult.
-			button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult, 2.3f);
+			button = new CatapultButton(this, new PxVec3(0.0f, 0.5f, 48.0f), catapult, 0.8f, 1.0f);
 
 		#pragma endregion
 		
