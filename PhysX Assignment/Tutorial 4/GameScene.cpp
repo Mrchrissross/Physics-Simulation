@@ -27,6 +27,7 @@ namespace PhysicsEngine
 		// Enable customised collision detection.
 		px_scene->setFlag(PxSceneFlag::eENABLE_CCD, true);
 
+		// Set the visualisaion parameters.
 		SetVisualisation();
 
 		// Create Ball
