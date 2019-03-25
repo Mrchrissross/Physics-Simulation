@@ -1,2 +1,35 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (PhysX Assignment.vcxproj, Tutorial 4.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Tutorial 4.vcxproj -> C:\Users\Student\Downloads\PhysX Assignment\x64\Debug\PhysX  Assignment.exe
+  GameScene.cpp
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(54): error C2143: syntax error: missing ';' before '*'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(54): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(54): error C2238: unexpected token(s) preceding ';'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(65): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(65): error C2061: syntax error: identifier 'RugbyBall'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(68): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(69): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(70): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(71): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(73): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(88): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(93): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(98): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(101): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(108): error C2065: 'ball': undeclared identifier
+  VisualDebugger.cpp
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(54): error C2143: syntax error: missing ';' before '*'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(54): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(54): error C2238: unexpected token(s) preceding ';'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(65): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(65): error C2061: syntax error: identifier 'RugbyBall'
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(68): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(69): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(70): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(71): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(73): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(88): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(93): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(98): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(101): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\complexactors.h(108): error C2065: 'ball': undeclared identifier
+c:\users\student\documents\github\physics-simulation\physx assignment\tutorial 4\visualdebugger.cpp(201): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...

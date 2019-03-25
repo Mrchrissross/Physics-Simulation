@@ -296,6 +296,9 @@ namespace VisualDebugger
 			PxVec3 shadow_color = default_color*0.9;
 			for(PxU32 i=0;i<numActors;i++)
 			{
+				if (actors[i]->getName() == "ScoreButton")
+					continue;
+
 				if (actors[i]->isCloth())
 				{
 					RenderCloth((PxCloth*)actors[i]);
